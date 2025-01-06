@@ -1,7 +1,6 @@
 package physic
 
 import (
-	"log"
 	"math"
 )
 
@@ -80,7 +79,7 @@ func PFD(Obj *Object, Floor func(float64) float64, Input UserInput, delay float6
 	newSpeed := Obj.Speed.apply(ResultingForce, delay)
 	newSpeedN := newSpeed.norm()
 	if newSpeedN > Const.CapSpeed {
-		log.Println("Speed Cap", newSpeed, newSpeed.multiply(Const.CapSpeed/newSpeedN))
+		Obj.SetMetaData("SpeedCaped", true)
 		newSpeed = newSpeed.multiply(Const.CapSpeed / newSpeedN)
 	}
 	*Obj.Speed = newSpeed

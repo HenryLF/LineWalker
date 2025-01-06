@@ -68,6 +68,18 @@ class BigPlayerRight extends BigPlayerLeft {
   spriteSheet = BigPlayerRight_img;
 }
 
+const Ball = {
+  color : "#0000FF",
+  render(x,y,r){
+    ctx.save()
+    ctx.fillStyle = this.color
+    let ball = new Path2D();
+    ball.arc(x,y,r,0,Math.PI*2)
+    ball.closePath()
+    ctx.fill(ball)
+    ctx.restore()
+  }
+}
 
 
 
