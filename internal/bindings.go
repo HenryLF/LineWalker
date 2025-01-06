@@ -3,7 +3,6 @@ package bindings
 import (
 	"linewalker/internal/physic"
 	"linewalker/internal/worldmap"
-	"log"
 	"time"
 
 	webview "github.com/webview/webview_go"
@@ -43,7 +42,7 @@ func parseUserInput(M map[string]any) physic.UserInput {
 func RegisterBindings(w webview.WebView) {
 	w.Bind("setPlayerView", CurrentView.SetSize)
 
-	w.Bind("requestPlayerCoord", requestPlayerCoord)
+	w.Bind("requestObjectCoord", requestObjectCoord)
 	w.Bind("requestLine", requestLine)
 
 	w.Bind("setPhysic", physic.Const.Set)
@@ -62,19 +61,17 @@ func RegisterBindings(w webview.WebView) {
 var CurrentView = PlayerView{X: 0, Y: 0, Width: 300, Height: 300}
 var N int = 0
 
-type PlayerCoord struct{ X, Y, XSpeed, YSpeed, XAbs, YAbs int }
-
-func requestPlayerCoord(M map[string]any) PlayerCoord {
+func requestObjectCoord(M map[string]any) []physic.Object {
 	Input := parseUserInput(M)
-	for _, obj := range physic.CurrentState.Obj {
+	for k, obj := range physic.CurrentState.Obj {
 		physic.PFD(&obj, worldmap.CurrentMap.Generate, Input, physic.CurrentState.TimeElapsed())
-		// physic.PFD(&obj, worldmap.SlopeFloor(.2, 300), Input, CurrentState.TimeElapsed())
+		if k == 0 {
+			CurrentView.SetCoord(int(obj.Coord.X)-CurrentView.Width/2, int(obj.Coord.Y)-CurrentView.Height/2)
+		}
+		obj.SetScreenCoord(CurrentView.X, CurrentView.Y)
 	}
-	log.Println(physic.CurrentState.TimeElapsed(), physic.CurrentState.Obj)
 	physic.CurrentState.Time = time.Now()
-	player := physic.CurrentState.Obj[0]
-	CurrentView.SetCoord(int(player.Coord.X)-CurrentView.Width/2, int(player.Coord.Y)-CurrentView.Height/2)
-	return PlayerCoord{X: int(player.Coord.X) - CurrentView.X, Y: int(player.Coord.Y) - CurrentView.Y, XSpeed: int(player.Speed.X), YSpeed: int(player.Speed.Y), XAbs: int(player.Coord.X), YAbs: int(player.Coord.Y)}
+	return physic.CurrentState.Obj
 
 }
 
@@ -82,12 +79,9 @@ const LineBuffer = 20
 
 func requestLine() map[int]int {
 	var out = map[int]int{}
-	// f := worldmap.SlopeFloor(.2, 300)
-	// log.Println(CurrentView)
 	for x := -LineBuffer; x < CurrentView.Width+LineBuffer; x++ {
 		rx := x + CurrentView.X
 		out[x] = int(worldmap.CurrentMap.Generate(float64(rx))) - CurrentView.Y
-		// out[x] = int(f(float64(rx))) + CurrentView.Y
 	}
 	return out
 }

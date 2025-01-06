@@ -11,12 +11,18 @@ let renderFunction = drawPlayer;
 
 async function loop(n) {
   n = n ? n : 0;
-  playerCoord = await window.requestPlayerCoord(userInput);
+  objCoord = await window.requestObjectCoord(userInput);
   lineMap = await window.requestLine();
   drawFloor(lineMap);
-  renderFunction(playerCoord, n);
-  updateUI(playerCoord);
-  setTimeout(
+  objCoord.forEach((obj,k) => {
+    if (k == 0){
+    renderFunction(obj, n);
+    updateUI(obj);
+  }else{
+    renderObject(obj)
+  }
+});
+setTimeout(
     (n) => {
       loop(n + 1);
     },

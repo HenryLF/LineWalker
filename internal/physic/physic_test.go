@@ -16,9 +16,25 @@ func VerySlopFloor(i float64) float64 {
 	return 500 - i*100
 }
 func (Obj Object) log(t *testing.T) {
-	t.Logf("Content of Object %v\nCoord : %v\nSpeed : %v\nMass : %v\nRadius : %v", &Obj, *Obj.Coord, *Obj.Speed, Obj.M, Obj.R)
+	t.Logf(`Content of Object %v
+	Coord : %v
+	Speed : %v
+	Mass : %v
+	Radius : %v
+	Screen : %v
+	Meta : %v`, &Obj, *Obj.Coord, *Obj.Speed, Obj.M, Obj.R, *Obj.ScreenCoord, Obj.Meta)
 }
 func TestObject(t *testing.T) {
+	ExObject.log(t)
+}
+func TestObjectSetScreenCoord(t *testing.T) {
+	ExObject.log(t)
+	ExObject.SetScreenCoord(30, 30)
+	ExObject.log(t)
+}
+func TestObjectSetMeta(t *testing.T) {
+	ExObject.log(t)
+	ExObject.SetMetaData("Created", "now")
 	ExObject.log(t)
 }
 

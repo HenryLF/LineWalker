@@ -3,10 +3,7 @@ package physic
 import (
 	"log"
 	"math"
-	"time"
 )
-
-var CurrentState = State{Time: time.Now(), Obj: []Object{NewObject(500, 0, 5, 50)}}
 
 func gravityForce(Obj Object) Vect {
 	return Vect{X: 0, Y: Obj.M * Const.G}
@@ -70,6 +67,7 @@ func movementForce(Input UserInput, grounded bool) Vect {
 }
 
 func PFD(Obj *Object, Floor func(float64) float64, Input UserInput, delay float64) {
+	delay = math.Min(delay, Const.MaxTimeDelay)
 	grounded := contact(*Obj, Floor)
 	ResultingForce := gravityForce(*Obj)
 	ResultingForce = ResultingForce.add(frictionForce(*Obj, grounded))
@@ -83,8 +81,8 @@ func PFD(Obj *Object, Floor func(float64) float64, Input UserInput, delay float6
 		log.Println("Speed Cap", newSpeed, newSpeed.multiply(Const.CapSpeed/newSpeedN))
 		newSpeed = newSpeed.multiply(Const.CapSpeed / newSpeedN)
 	}
-	*(Obj.Speed) = newSpeed
-	*(Obj.Coord) = Obj.Coord.apply(*(Obj.Speed), delay)
+	*Obj.Speed = newSpeed
+	*Obj.Coord = Obj.Coord.apply(*(Obj.Speed), delay)
 	if contact(*Obj, Floor) {
 		Obj.ground(Floor)
 	}

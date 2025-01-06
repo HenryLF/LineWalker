@@ -14,6 +14,7 @@ let physicSettings = [
   ["Player AccelerationY (Ground)", "VerticalAcc"],
   ["Max Speed", "CapSpeed"],
   ["Slow Motion", "TimeSlow"],
+  ["Max time step","MaxTimeDelay"]
 ];
 
 let mapSettings = [
@@ -37,8 +38,8 @@ let addObjectSettings = [
   ["Size", "objR"],
 ];
 let addObjectCurrentsettings = new Map([
-  ["objX :", 5],
-  ["objY :", 5],
+  ["objX", 5],
+  ["objY", 5],
   ["objM", 5],
   ["objR", 5],
 ]);

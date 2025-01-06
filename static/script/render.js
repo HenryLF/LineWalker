@@ -92,39 +92,39 @@ function drawFloor(map) {
 }
 
 const maxIdleSpeed = 30;
-function drawPlayer(coord, n) {
+function drawPlayer(obj, n) {
   let p;
-  if (coord.XSpeed < -maxIdleSpeed) {
+  if (obj.Speed.X < -maxIdleSpeed) {
     p = new PlayerLeft();
-  } else if (coord.XSpeed > maxIdleSpeed) {
+  } else if (obj.Speed.X > maxIdleSpeed) {
     p = new PlayerRight();
   } else {
     p = new PlayerIdle();
   }
-  p.render(coord.X, coord.Y, n);
+  p.render(obj.ScreenCoord.X, obj.ScreenCoord.Y, n);
 }
 
-function drawBigPlayer(coord, n) {
+function drawBigPlayer(obj, n) {
   let p;
-  if (coord.XSpeed < -maxIdleSpeed) {
+  if (obj.Speed.X < -maxIdleSpeed) {
     p = new BigPlayerLeft();
-  } else if (coord.XSpeed > maxIdleSpeed) {
+  } else if (obj.Speed.X > maxIdleSpeed) {
     p = new BigPlayerRight();
   } else {
     p = new BigPlayerIdle;
   }
-  p.render(coord.X, coord.Y, n);
+  p.render(obj.ScreenCoord.X, obj.ScreenCoord.Y, n);
 }
 
 const xSpeed = document.getElementById("xspeed");
 const ySpeed = document.getElementById("yspeed");
 const xCoord = document.getElementById("xcoord");
 const yCoord = document.getElementById("ycoord");
-function updateUI(coord) {
-  xSpeed.innerText = roundTo(coord.XSpeed, 2);
-  ySpeed.innerText = roundTo(coord.YSpeed, 2);
-  xCoord.innerText = roundTo(coord.XAbs, 2);
-  yCoord.innerText = roundTo(coord.YAbs, 2);
+function updateUI(obj) {
+  xSpeed.innerText = roundTo(obj.Speed.X, 2);
+  ySpeed.innerText = roundTo(obj.Speed.Y, 2);
+  xCoord.innerText = roundTo(obj.Coord.X, 0);
+  yCoord.innerText = roundTo(obj.Coord.Y, 0);
 }
 
 function roundTo(x, n) {
