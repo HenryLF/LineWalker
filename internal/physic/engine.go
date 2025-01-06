@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-var CurrentState = State{Time: time.Now(), Obj: []Object{NewObject(500, 0, 10, 3)}}
+var CurrentState = State{Time: time.Now(), Obj: []Object{NewObject(500, 0, 50, 3)}}
 
 func gravityForce(Obj Object) vect {
 	return vect{X: 0, Y: Obj.M * Const.G}

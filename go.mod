@@ -1,4 +1,4 @@
-module linescroller
+module linewalker
 
 go 1.23.4
 

@@ -8,12 +8,12 @@ import (
 
 var G float64 = 1000
 
-var AirFrictionCoeff float64 = .1
-var FloorFrictionCoeff float64 = .9999
+var AirFrictionCoeff float64 = .2
+var FloorFrictionCoeff float64 = 4
 
 var DX float64 = 10
 
-var LateralAcc float64 = 1000
+var LateralAcc float64 = 2000
 var LateralAirAcc float64 = 0
 var VerticalAcc float64 = 10000
 

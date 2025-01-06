@@ -1,7 +1,7 @@
 package main
 
 import (
-	bindings "linescroller/internal"
+	bindings "linewalker/internal"
 	"path/filepath"
 	"reflect"
 

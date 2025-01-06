@@ -2,7 +2,6 @@ package physic
 
 import (
 	"math"
-	"time"
 )
 
 type UserInput struct {
@@ -10,16 +9,6 @@ type UserInput struct {
 	Left  bool `json:"Left"`
 	Down  bool `json:"Down"`
 	Right bool `json:"Right"`
-}
-
-type State struct {
-	Time time.Time
-	Obj  []Object
-}
-
-func (S State) TimeElapsed() float64 {
-	out := float64(time.Now().UnixMilli() - S.Time.UnixMilli())
-	return (out) / (1000 * Const.TimeSlow)
 }
 
 type Object struct {

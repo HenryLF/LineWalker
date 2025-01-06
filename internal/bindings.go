@@ -1,8 +1,8 @@
 package bindings
 
 import (
-	"linescroller/internal/physic"
-	"linescroller/internal/worldmap"
+	"linewalker/internal/physic"
+	"linewalker/internal/worldmap"
 	"time"
 
 	webview "github.com/webview/webview_go"
