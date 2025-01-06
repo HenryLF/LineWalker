@@ -45,7 +45,6 @@ class PlayerRight extends PlayerLeft {
   spriteSheet = PlayerRight_img;
 }
 
-
 let BigPlayerIdle_img = new Image();
 BigPlayerIdle_img.src = "./assets/bigPlayerIdle.png";
 class BigPlayerIdle extends Entity {
@@ -69,22 +68,17 @@ class BigPlayerRight extends BigPlayerLeft {
 }
 
 const Ball = {
-  color : "#0000FF",
-  render(x,y,r){
-    console.log(r)
-    ctx.save()
-    ctx.fillStyle = this.color
+  color: "#0000FF",
+  render(x, y, r) {
+    ctx.save();
+    ctx.fillStyle = this.color;
     let ball = new Path2D();
-    ball.arc(x,y,r,0,Math.PI*2)
-    ball.closePath()
-    ctx.fill(ball)
-    ctx.restore()
-  }
-}
-
-
-
-
+    ball.arc(x, y, r, 0, Math.PI * 2);
+    ball.closePath();
+    ctx.fill(ball);
+    ctx.restore();
+  },
+};
 
 let Deresolve = 10;
 ctx.strokeStyle = "#000000";
@@ -99,8 +93,8 @@ function drawFloor(map) {
   floor.lineTo(cvs.width + Deresolve, cvs.height + Deresolve);
   floor.lineTo(-Deresolve, cvs.height + Deresolve);
   floor.closePath();
-  ctx.fill(floor)
-  ctx.stroke(floor)
+  ctx.fill(floor);
+  ctx.stroke(floor);
   // ctx.closePath();
 }
 
@@ -124,7 +118,7 @@ function drawBigPlayer(obj, n) {
   } else if (obj.Speed.X > maxIdleSpeed) {
     p = new BigPlayerRight();
   } else {
-    p = new BigPlayerIdle;
+    p = new BigPlayerIdle();
   }
   p.render(obj.ScreenCoord.X, obj.ScreenCoord.Y, n);
 }

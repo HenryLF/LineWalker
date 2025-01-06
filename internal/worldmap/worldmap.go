@@ -17,6 +17,8 @@ const ScaleY float64 = 1500
 type WorldMap struct {
 	A, B, Y0, ScaleX, ScaleY float64
 	Generator                *perlin.Perlin
+	TransformCoordX          func(x int) float64
+	TransformScreenY         func(y float64) int
 }
 
 type Response map[int]int
@@ -31,6 +33,11 @@ var CurrentMap = newPerlin()
 
 func (M WorldMap) Generate(x float64) float64 {
 	return M.ScaleY*math.Max(M.Generator.Noise1D(x/M.ScaleX)+1, 0) + M.Y0
+}
+
+func (M WorldMap) GenerateFromTransform(x int, CoordTransformX func(x int) float64, ScreenTransformY func(y float64) int) int {
+	return ScreenTransformY(M.Generate(CoordTransformX(x)))
+
 }
 
 func FlatFloor(c float64) func(float64) float64 {

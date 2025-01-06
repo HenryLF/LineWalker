@@ -63,8 +63,7 @@ const LineBuffer = 20
 func requestLine() map[int]int {
 	var out = map[int]int{}
 	for x := -LineBuffer; x < CurrentView.Width+LineBuffer; x++ {
-		rx := x + CurrentView.X
-		out[x] = int(worldmap.CurrentMap.Generate(float64(rx))) - CurrentView.Y
+		out[x] = worldmap.CurrentMap.GenerateFromTransform(x, CurrentView.CoordTransformX, CurrentView.ScreenTransformY)
 	}
 	return out
 }
