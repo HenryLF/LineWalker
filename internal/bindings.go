@@ -3,6 +3,7 @@ package bindings
 import (
 	"linewalker/internal/physic"
 	"linewalker/internal/worldmap"
+	"log"
 	"time"
 
 	webview "github.com/webview/webview_go"
@@ -54,23 +55,24 @@ func RegisterBindings(w webview.WebView) {
 	w.Bind("setObject", physic.CurrentState.Set)
 	w.Bind("getObject", physic.CurrentState.Get)
 
+	w.Bind("addObject", physic.CurrentState.AddObject)
+
 }
 
 var CurrentView = PlayerView{X: 0, Y: 0, Width: 300, Height: 300}
-var CurrentState = physic.State{Time: time.Now(), Obj: []physic.Object{physic.NewObject(200, 0, 28, 1)}}
 var N int = 0
 
 type PlayerCoord struct{ X, Y, XSpeed, YSpeed, XAbs, YAbs int }
 
 func requestPlayerCoord(M map[string]any) PlayerCoord {
 	Input := parseUserInput(M)
-	for _, obj := range CurrentState.Obj {
-		physic.PFD(&obj, worldmap.CurrentMap.Generate, Input, CurrentState.TimeElapsed())
+	for _, obj := range physic.CurrentState.Obj {
+		physic.PFD(&obj, worldmap.CurrentMap.Generate, Input, physic.CurrentState.TimeElapsed())
 		// physic.PFD(&obj, worldmap.SlopeFloor(.2, 300), Input, CurrentState.TimeElapsed())
 	}
-	// log.Println(CurrentState.TimeElapsed())
-	CurrentState.Time = time.Now()
-	player := CurrentState.Obj[0]
+	log.Println(physic.CurrentState.TimeElapsed(), physic.CurrentState.Obj)
+	physic.CurrentState.Time = time.Now()
+	player := physic.CurrentState.Obj[0]
 	CurrentView.SetCoord(int(player.Coord.X)-CurrentView.Width/2, int(player.Coord.Y)-CurrentView.Height/2)
 	return PlayerCoord{X: int(player.Coord.X) - CurrentView.X, Y: int(player.Coord.Y) - CurrentView.Y, XSpeed: int(player.Speed.X), YSpeed: int(player.Speed.Y), XAbs: int(player.Coord.X), YAbs: int(player.Coord.Y)}
 

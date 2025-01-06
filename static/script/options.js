@@ -4,8 +4,6 @@ const addObjectTemp = document.getElementById("add-object-temp");
 const addObjectButton = document.getElementById("add-object-button");
 const addObjectMenu = document.getElementById("add-object-menu");
 
-
-
 let physicSettings = [
   ["Gravity", "G"],
   ["Air Friction", "AirFrictionCoeff"],
@@ -33,11 +31,17 @@ let playerSettings = [
   ["Size", "R"],
 ];
 let addObjectSettings = [
-  ["X :", "X"],
-  ["Y :", "Y"],
-  ["Masse", "M"],
-  ["Size", "R"],
+  ["X :", "objX"],
+  ["Y :", "objY"],
+  ["Masse", "objM"],
+  ["Size", "objR"],
 ];
+let addObjectCurrentsettings = new Map([
+  ["objX :", 5],
+  ["objY :", 5],
+  ["objM", 5],
+  ["objR", 5],
+]);
 
 function populateSetting(name, callBackString, callbackGet, callbackSet) {
   let t = settingsTemp.content.cloneNode(true);
@@ -56,7 +60,6 @@ function populateSetting(name, callBackString, callbackGet, callbackSet) {
   return t;
 }
 
-
 function populateMenus() {
   mapSettings.map((e) => {
     mapDiv.appendChild(populateSetting(...e, window.getMap, window.setMap));
@@ -74,10 +77,25 @@ function populateMenus() {
   addObjectSettings.map((e) => {
     let t = addObjectTemp.content.cloneNode(true);
     t.getElementById("name").innerText = e[0];
-    t.getElementById("input").value = 5;
-    t.id = e[1];
+    let input = t.getElementById("input");
+    input.value = addObjectCurrentsettings.get(e[1]);
+    input.onchange = () => {
+      addObjectCurrentsettings.set(e[1], parseFloat(input.value));
+    };
     addObjectMenu.appendChild(t);
   });
+
+  addObjectButton.onclick = () => {
+    let x = addObjectMenu.querySelector("objX");
+    let y = addObjectMenu.querySelector("objY");
+    let m = addObjectMenu.querySelector("objM");
+    let r = addObjectMenu.querySelector("objR");
+    if (x && y && r && m) {
+      window.addObject(x, y, r, m);
+    } else {
+      window.addObject(0, 0, 5, 5);
+    }
+  };
 }
 
 const playerSelectButton = document.getElementById("playerselect-button");
@@ -98,5 +116,3 @@ const bigCatButton = document.getElementById("bigcat");
 bigCatButton.onclick = () => {
   renderFunction = drawBigPlayer;
 };
-
-
