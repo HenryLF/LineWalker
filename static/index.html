@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./style/style.css" />
+  </head>
+  <body>
+    <div id="playerselect-menu" class="overlay">
+      <img src="./assets/playerLeft.png" class="button"id="eggplant">
+      <img src="./assets/bigPlayerLeft.png" class="button" id="bigcat">
+    </div>
+    <div id="ui" class="topleft">
+      <p class="ui-text">
+        Coord {X:<span id="xcoord"></span> Y:<span id="ycoord"></span>}
+      </p>
+      <p class="ui-text">
+        Speed {X:<span id="xspeed"></span> Y:<span id="yspeed"></span>}
+      </p>
+    </div>
+    <div id="option" class="topright">
+      <img src="./assets/playerOption.png" id="playerselect-button" class="button">
+    </div>
+    <canvas id="canvas"></canvas>
+    <div id="control-container" >
+      <div id="physic" class="control"></div>
+      <div id="map" class="control"> </div>
+    </div>
+
+
+    <template id="settings">
+        <div class="settings">
+          <span id="name"></span> : <span id="value"></span>
+          <input type="number" id="input">
+          <button id="set">SET</button>
+    </template>
+    <script src="./script/render.js"></script>
+    <script src="./script/ui.js"></script>
+    <script src="./script/options.js"></script>
+    <script src="./script/gameloop.js"></script>
+  </body>
+</html>

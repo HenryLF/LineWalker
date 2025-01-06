@@ -1,0 +1,81 @@
+body {
+  overflow: hidden;
+  background-color: rgb(180, 180, 180);
+  height: 100vh;
+  width: 100vw;
+  font-weight: bold;
+}
+.overlay{
+  width: 100%;
+  height: 100vh;
+  display: none;
+  justify-content: center;
+  flex-direction : column;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.534);
+}
+
+
+.topleft,.overlay {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+.topright{
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  z-index: 2;
+}
+.button{
+  max-height: 10vh;
+  margin: 2%;
+}
+
+#control-container {
+  display: flex;
+  justify-content: space-around;
+  border: 2px solid black;
+}
+.control {
+  margin: 1vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 25vh;
+  width: 48vw;
+  overflow: scroll;
+  border: 1px solid black;
+}
+.settings{
+
+  border: 1px solid rgba(0, 0, 0, 0.219);
+  margin: 2%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#option {
+  max-height: 5vh;
+  margin: 2%;
+}
+
+
+
+.button:hover{
+  animation-name: select;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-delay: 0.5s;
+
+}
+
+@keyframes select {
+  50%{
+    transform: scale(1.2);
+  }
+  to{
+    transform: scale(1);
+  }
+}
