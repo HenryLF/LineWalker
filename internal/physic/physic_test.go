@@ -100,3 +100,16 @@ func TestGetConst(t *testing.T) {
 	k := Const.Get("G")
 	t.Log(k)
 }
+
+func TestGetCoord(t *testing.T) {
+	t.Log(CurrentState)
+	k := CurrentState.Get(0, "Coord")
+	t.Log(k)
+}
+
+func TestSetCoord(t *testing.T) {
+	t.Log(CurrentState.Obj[0].Coord)
+	k := CurrentState.Set(0, "Coord", 453, -566)
+	t.Log(k)
+	t.Log(CurrentState.Obj[0].Coord)
+}

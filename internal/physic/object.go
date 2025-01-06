@@ -12,8 +12,8 @@ type UserInput struct {
 }
 
 type Object struct {
-	Coord *vect
-	Speed *vect
+	Coord *Vect
+	Speed *Vect
 
 	M float64
 	R float64
@@ -21,36 +21,36 @@ type Object struct {
 
 func NewObject(X, Y, R, M float64) Object {
 	var out Object
-	out.Coord = new(vect)
-	*(out.Coord) = vect{X: X, Y: Y}
-	out.Speed = new(vect)
+	out.Coord = new(Vect)
+	*(out.Coord) = Vect{X: X, Y: Y}
+	out.Speed = new(Vect)
 	out.M = M
 	out.R = R
 	return out
 }
 
-type vect struct {
+type Vect struct {
 	X, Y float64
 }
 
-func (v vect) multiply(k float64) vect {
-	return vect{X: v.X * k, Y: v.Y * k}
+func (v Vect) multiply(k float64) Vect {
+	return Vect{X: v.X * k, Y: v.Y * k}
 }
-func (v vect) add(A ...vect) vect {
+func (v Vect) add(A ...Vect) Vect {
 	for _, i := range A {
 		v.X += i.X
 		v.Y += i.Y
 	}
 	return v
 }
-func (v vect) norm() float64 {
+func (v Vect) norm() float64 {
 	return math.Hypot(v.X, v.Y)
 }
 
-func (v vect) rot() vect {
-	return vect{X: -v.Y, Y: -v.X}
+func (v Vect) rot() Vect {
+	return Vect{X: -v.Y, Y: -v.X}
 }
 
-func (v vect) apply(v2 vect, delay float64) vect {
-	return vect{X: v.X + v2.X*delay, Y: v.Y + v2.Y*delay}
+func (v Vect) apply(v2 Vect, delay float64) Vect {
+	return Vect{X: v.X + v2.X*delay, Y: v.Y + v2.Y*delay}
 }

@@ -8,22 +8,22 @@ import (
 
 var CurrentState = State{Time: time.Now(), Obj: []Object{NewObject(500, 0, 50, 3)}}
 
-func gravityForce(Obj Object) vect {
-	return vect{X: 0, Y: Obj.M * Const.G}
+func gravityForce(Obj Object) Vect {
+	return Vect{X: 0, Y: Obj.M * Const.G}
 }
 
-func reactiveForce(Floor func(float64) float64, Obj Object, R vect) vect {
+func reactiveForce(Floor func(float64) float64, Obj Object, R Vect) Vect {
 	if contact(Obj, Floor) {
 		ang := -angleOf(Floor, Obj.Coord.X)
-		out := vect{X: R.norm() * math.Cos(ang), Y: R.norm() * math.Sin(ang)}
+		out := Vect{X: R.norm() * math.Cos(ang), Y: R.norm() * math.Sin(ang)}
 		// log.Println(out, out.rot())
 		return out.rot()
 	} else {
-		return vect{X: 0, Y: 0}
+		return Vect{X: 0, Y: 0}
 	}
 }
 
-func frictionForce(Obj Object, contact bool) vect {
+func frictionForce(Obj Object, contact bool) Vect {
 	if contact {
 		return (*Obj.Speed).multiply(-Const.FloorFrictionCoeff)
 	}
@@ -43,28 +43,28 @@ func (Obj *Object) ground(Floor func(float64) float64) {
 	Obj.Speed.Y = math.Min(Floor(Obj.Speed.Y), 0)
 }
 
-func movementForce(Input UserInput, grounded bool) vect {
-	out := vect{}
+func movementForce(Input UserInput, grounded bool) Vect {
+	out := Vect{}
 	if Input.Up && grounded {
-		out = out.add(vect{X: 0, Y: -Const.VerticalAcc})
+		out = out.add(Vect{X: 0, Y: -Const.VerticalAcc})
 		return out
 	}
 	if Input.Right {
 		if grounded {
-			out = out.add(vect{X: Const.LateralAcc, Y: 0})
+			out = out.add(Vect{X: Const.LateralAcc, Y: 0})
 		} else {
-			out = out.add(vect{X: Const.LateralAirAcc, Y: 0})
+			out = out.add(Vect{X: Const.LateralAirAcc, Y: 0})
 		}
 	}
 	if Input.Left && grounded {
 		if grounded {
-			out = out.add(vect{X: -Const.LateralAcc, Y: 0})
+			out = out.add(Vect{X: -Const.LateralAcc, Y: 0})
 		} else {
-			out = out.add(vect{X: -Const.LateralAirAcc, Y: 0})
+			out = out.add(Vect{X: -Const.LateralAirAcc, Y: 0})
 		}
 	}
 	if Input.Down && !grounded {
-		out = out.add(vect{X: 0, Y: Const.VerticalAcc})
+		out = out.add(Vect{X: 0, Y: Const.VerticalAcc})
 	}
 	return out
 }
