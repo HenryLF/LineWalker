@@ -1,21 +1,10 @@
-const settingsTemp = document.getElementById("settings");
+const settingsTemp = document.getElementById("settings-temp");
+const addObjectTemp = document.getElementById("add-object-temp");
 
-function populateSetting(name, callBackString, callbackGet, callbackSet) {
-  let t = settingsTemp.content.cloneNode(true);
-  t.getElementById("name").innerText = name;
-  let input = t.getElementById("input");
-  t.getElementById("set").onclick = async () => {
-    let val = parseFloat(input.value);
-    let k;
-    if (val) {
-      k = await callbackSet(callBackString, val);
-    } else {
-      k = await callbackGet(callBackString);
-    }
-    input.value = k;
-  };
-  return t;
-}
+const addObjectButton = document.getElementById("add-object-button");
+const addObjectMenu = document.getElementById("add-object-menu");
+
+
 
 let physicSettings = [
   ["Gravity", "G"],
@@ -37,6 +26,37 @@ let mapSettings = [
   ["Altitude", "Y0"],
 ];
 
+let playerSettings = [
+  ["X :", "X"],
+  ["Y :", "Y"],
+  ["Masse", "M"],
+  ["Size", "R"],
+];
+let addObjectSettings = [
+  ["X :", "X"],
+  ["Y :", "Y"],
+  ["Masse", "M"],
+  ["Size", "R"],
+];
+
+function populateSetting(name, callBackString, callbackGet, callbackSet) {
+  let t = settingsTemp.content.cloneNode(true);
+  t.getElementById("name").innerText = name;
+  let input = t.getElementById("input");
+  t.getElementById("set").onclick = async () => {
+    let val = parseFloat(input.value);
+    let k;
+    if (val) {
+      k = await callbackSet(callBackString, val);
+    } else {
+      k = await callbackGet(callBackString);
+    }
+    input.value = k;
+  };
+  return t;
+}
+
+
 function populateMenus() {
   mapSettings.map((e) => {
     mapDiv.appendChild(populateSetting(...e, window.getMap, window.setMap));
@@ -51,6 +71,13 @@ function populateMenus() {
       i.onclick();
     }
   }
+  addObjectSettings.map((e) => {
+    let t = addObjectTemp.content.cloneNode(true);
+    t.getElementById("name").innerText = e[0];
+    t.getElementById("input").value = 5;
+    t.id = e[1];
+    addObjectMenu.appendChild(t);
+  });
 }
 
 const playerSelectButton = document.getElementById("playerselect-button");
@@ -69,5 +96,7 @@ eggPlantButton.onclick = () => {
 };
 const bigCatButton = document.getElementById("bigcat");
 bigCatButton.onclick = () => {
-    renderFunction = drawBigPlayer;
-  };
+  renderFunction = drawBigPlayer;
+};
+
+

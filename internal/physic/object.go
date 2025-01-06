@@ -19,7 +19,7 @@ type Object struct {
 	R float64
 }
 
-func NewObject(X, Y, R, M float64) Object {
+func NewObject(X, Y, M, R float64) Object {
 	var out Object
 	out.Coord = new(Vect)
 	*(out.Coord) = Vect{X: X, Y: Y}

@@ -41,12 +41,18 @@ func parseUserInput(M map[string]any) physic.UserInput {
 
 func RegisterBindings(w webview.WebView) {
 	w.Bind("setPlayerView", CurrentView.SetSize)
+
 	w.Bind("requestPlayerCoord", requestPlayerCoord)
 	w.Bind("requestLine", requestLine)
+
 	w.Bind("setPhysic", physic.Const.Set)
 	w.Bind("getPhysic", physic.Const.Get)
+
 	w.Bind("setMap", worldmap.CurrentMap.Set)
 	w.Bind("getMap", worldmap.CurrentMap.Get)
+
+	w.Bind("setObject", physic.CurrentState.Set)
+	w.Bind("getObject", physic.CurrentState.Get)
 
 }
 

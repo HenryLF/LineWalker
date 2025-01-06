@@ -11,30 +11,43 @@
       <img src="./assets/playerLeft.png" class="button"id="eggplant">
       <img src="./assets/bigPlayerLeft.png" class="button" id="bigcat">
     </div>
-    <div id="ui" class="topleft">
-      <p class="ui-text">
-        Coord {X:<span id="xcoord"></span> Y:<span id="ycoord"></span>}
-      </p>
-      <p class="ui-text">
-        Speed {X:<span id="xspeed"></span> Y:<span id="yspeed"></span>}
-      </p>
+    <div id="screen-container">
+      <div id="ui" class="topleft">
+        <p class="ui-text">
+          Coord {X:<span id="xcoord"></span> Y:<span id="ycoord"></span>}
+        </p>
+        <p class="ui-text">
+          Speed {X:<span id="xspeed"></span> Y:<span id="yspeed"></span>}
+        </p>
+      </div>
+      <div id="option" class="topright">
+        <img src="./assets/playerOption.png" id="playerselect-button" class="button">
+      </div>
+      <div id= "option" class="bottomright">
+        <div id="add-object-menu">
+        </div>
+          <img src="./assets/playerOption.png" id="add-object-button" class="button">
+      </div>
+      <canvas id="canvas"></canvas>
     </div>
-    <div id="option" class="topright">
-      <img src="./assets/playerOption.png" id="playerselect-button" class="button">
-    </div>
-    <canvas id="canvas"></canvas>
     <div id="control-container" >
       <div id="physic" class="control"></div>
       <div id="map" class="control"> </div>
     </div>
 
 
-    <template id="settings">
+    <template id="settings-temp">
         <div class="settings">
           <span id="name"></span> : <span id="value"></span>
           <input type="number" id="input">
           <button id="set">SET</button>
     </template>
+
+    <template id="add-object-temp">
+      <div class="settings-obj">
+        <span id="name"></span> : <span id="value"></span>
+        <input type="number" width="50px" id="input">
+  </template>
     <script src="./script/render.js"></script>
     <script src="./script/ui.js"></script>
     <script src="./script/options.js"></script>

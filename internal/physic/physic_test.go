@@ -40,10 +40,10 @@ func TestObjectPermanence(t *testing.T) {
 }
 
 func TestVectAdd(t *testing.T) {
-	v1 := vect{1, 2}
-	v2 := vect{1, -2}
+	v1 := Vect{1, 2}
+	v2 := Vect{1, -2}
 	res := v1.add(v2)
-	exp := vect{2, 0}
+	exp := Vect{2, 0}
 	if res != exp {
 		t.Error("error adding", v1, "+", v2, "=", res)
 	}
@@ -112,4 +112,11 @@ func TestSetCoord(t *testing.T) {
 	k := CurrentState.Set(0, "Coord", 453, -566)
 	t.Log(k)
 	t.Log(CurrentState.Obj[0].Coord)
+}
+
+func TestAddObject(t *testing.T) {
+	t.Log(CurrentState.Obj)
+	CurrentState.AddObject(0, 0, 30, 30)
+	t.Log(CurrentState.Obj)
+
 }
