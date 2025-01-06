@@ -68,7 +68,9 @@ func movementForce(Input UserInput, grounded bool) Vect {
 
 func PFD(Obj *Object, Floor func(float64) float64, Input UserInput, delay float64) {
 	delay = math.Min(delay, Const.MaxTimeDelay)
+	Obj.SetMetaData("delay", delay)
 	grounded := contact(*Obj, Floor)
+	Obj.SetMetaData("wasGrounded", grounded)
 	ResultingForce := gravityForce(*Obj)
 	ResultingForce = ResultingForce.add(frictionForce(*Obj, grounded))
 	ResultingForce = ResultingForce.add(movementForce(Input, grounded))
@@ -83,8 +85,9 @@ func PFD(Obj *Object, Floor func(float64) float64, Input UserInput, delay float6
 	}
 	*Obj.Speed = newSpeed
 	*Obj.Coord = Obj.Coord.apply(*(Obj.Speed), delay)
-	if contact(*Obj, Floor) {
+	grounded = contact(*Obj, Floor)
+	if grounded {
 		Obj.ground(Floor)
 	}
-	// log.Println(*Obj.Coord, contact(*Obj, Floor))
+	Obj.SetMetaData("isGrounded", false)
 }
