@@ -14,8 +14,8 @@ const b = 2
 const a = 2
 const n = 2
 
-const ScaleX float64 = 200
-const ScaleY float64 = 200
+const ScaleX float64 = 2000
+const ScaleY float64 = 1500
 
 type WorldMap struct {
 	A, B, Y0, ScaleX, ScaleY float64
