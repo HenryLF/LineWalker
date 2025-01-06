@@ -1,7 +1,6 @@
 package physic
 
 import (
-	"log"
 	"math"
 )
 
@@ -39,6 +38,12 @@ func (Obj *Object) ground(Floor func(float64) float64) {
 	Obj.Coord.Y = math.Min(Floor(Obj.Coord.X)-Obj.R, Obj.Coord.Y)
 	Obj.Speed.Y = math.Min(Floor(Obj.Speed.Y), 0)
 }
+func colisionForce(Obj Object, Col Object) Vect {
+	Energy := Obj.M * math.Pow(Obj.Speed.norm(), 2) / 2
+	Energy += Col.M * math.Pow(Col.Speed.norm(), 2) / 2
+	Energy /= 2
+	return (*Col.Coord).to(*Obj.Coord).unit().multiply(Energy * Const.ElasticColision)
+}
 
 func movementForce(Input UserInput, grounded bool) Vect {
 	out := Vect{}
@@ -64,46 +69,4 @@ func movementForce(Input UserInput, grounded bool) Vect {
 		out = out.add(Vect{X: 0, Y: Const.VerticalAcc})
 	}
 	return out
-}
-
-func colisionForce(Obj Object, Col Object) Vect {
-	Energy := Obj.M * math.Pow(Obj.Speed.norm(), 2) / 2
-	Energy += Col.M * math.Pow(Col.Speed.norm(), 2) / 2
-	Energy /= 2
-	return (*Col.Coord).to(*Obj.Coord).unit().multiply(Energy * Const.ElasticColision)
-}
-
-func PFD(Obj *Object, Floor func(float64) float64, Input UserInput, Colision []Object, delay float64) {
-	delay = math.Min(delay, Const.MaxTimeDelay)
-	Obj.SetMetaData("delay", delay)
-	grounded := contact(*Obj, Floor)
-	Obj.SetMetaData("wasGrounded", grounded)
-	ResultingForce := gravityForce(*Obj)
-	ResultingForce = ResultingForce.add(frictionForce(*Obj, grounded))
-	ResultingForce = ResultingForce.add(movementForce(Input, grounded))
-	ResultingForce = ResultingForce.add(reactiveForce(Floor, *Obj, ResultingForce))
-	// col := Vect{}
-	if len(Colision) > 0 {
-		for _, colider := range Colision {
-			k := colisionForce(*Obj, colider)
-			log.Println(k)
-			ResultingForce = ResultingForce.add(k)
-		}
-	}
-
-	ResultingForce = ResultingForce.multiply(1 / Obj.M)
-	//Cap
-	newSpeed := Obj.Speed.apply(ResultingForce, delay)
-	newSpeedN := newSpeed.norm()
-	if newSpeedN > Const.CapSpeed {
-		Obj.SetMetaData("SpeedCaped", true)
-		newSpeed = newSpeed.unit().multiply(Const.CapSpeed)
-	}
-	*(Obj.Speed) = newSpeed
-	*(Obj.Coord) = Obj.Coord.apply(*(Obj.Speed), delay)
-	grounded = contact(*Obj, Floor)
-	if grounded {
-		Obj.ground(Floor)
-	}
-	Obj.SetMetaData("isGrounded", false)
 }

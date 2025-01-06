@@ -1,6 +1,7 @@
 package physic
 
 import (
+	"math"
 	"time"
 )
 
@@ -29,6 +30,23 @@ func (S State) ColisionMap() map[int][]Object {
 		}
 	}
 	return out
+}
+
+func (S *State) UpdateState(Input UserInput, Floor func(x float64) float64, ScreenTransform func(x, y float64) (int, int)) {
+	delay := math.Min(S.TimeElapsed(), Const.MaxTimeDelay)
+	Colision := S.ColisionMap()
+	for k, obj := range S.Obj {
+		if k == 0 {
+			obj.PFD(Floor, Input, Colision[k], delay)
+		} else {
+			obj.PFD(Floor, UserInput{}, Colision[k], delay)
+		}
+	}
+}
+func (S *State) ScreenCoordFromTransform(ScreenTransform func(float64, float64) (int, int)) {
+	for _, obj := range S.Obj {
+		obj.ScreenCoordFromTransform(ScreenTransform)
+	}
 }
 
 var CurrentState = State{Time: time.Now(), Obj: []Object{NewObject(500, 0, 5, 20)}}
