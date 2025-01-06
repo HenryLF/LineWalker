@@ -14,8 +14,20 @@ func (S State) TimeElapsed() float64 {
 	return (out) / (1000 * Const.TimeSlow)
 }
 
-func (S State) Colide() map[int][]Object {
+func (S State) ColisionMap() map[int][]Object {
+	if len(S.Obj) < 2 {
+		return map[int][]Object{}
+	}
 	out := make(map[int][]Object)
+	for j, A := range S.Obj[:len(S.Obj)-1] {
+		for k := 1; k < len(S.Obj)-j; k++ {
+			B := S.Obj[j+k]
+			if ObjectColide(A, B) {
+				out[j] = append(out[j], B)
+				out[j+k] = append(out[j+k], A)
+			}
+		}
+	}
 	return out
 }
 

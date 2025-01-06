@@ -71,6 +71,7 @@ class BigPlayerRight extends BigPlayerLeft {
 const Ball = {
   color : "#0000FF",
   render(x,y,r){
+    console.log(r)
     ctx.save()
     ctx.fillStyle = this.color
     let ball = new Path2D();

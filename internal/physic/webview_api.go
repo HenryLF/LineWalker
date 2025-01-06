@@ -1,6 +1,10 @@
 package physic
 
-import "log"
+import (
+	"errors"
+	"log"
+	"reflect"
+)
 
 func (S *State) Set(n int, s string, a ...float64) any {
 	if n < 0 || n > len(S.Obj) || len(a) == 0 {
@@ -56,4 +60,19 @@ func (S *State) AddObject(X, Y, M, R float64) bool {
 	log.Println("New Object", k, S)
 
 	return true
+}
+
+func (C *Constants) Set(s string, a float64) any {
+	c := reflect.ValueOf(C).Elem().FieldByName(s)
+	if c.CanSet() {
+		log.Println("Change ", s, " from ", c, " to ", a)
+		c.SetFloat(a)
+		return a
+	}
+	log.Println("Error setting", s)
+	return errors.New("trying to set unadressable field")
+}
+
+func (C *Constants) Get(s string) float64 {
+	return reflect.ValueOf(C).Elem().FieldByName(s).Float()
 }

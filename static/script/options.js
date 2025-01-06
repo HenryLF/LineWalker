@@ -14,7 +14,8 @@ let physicSettings = [
   ["Player AccelerationY (Ground)", "VerticalAcc"],
   ["Max Speed", "CapSpeed"],
   ["Slow Motion", "TimeSlow"],
-  ["Max time step","MaxTimeDelay"]
+  ["Max time step", "MaxTimeDelay"],
+  ["Colision Energy Transfert", "ElasticColision"],
 ];
 
 let mapSettings = [
@@ -37,7 +38,7 @@ let addObjectSettings = [
   ["Masse", "objM"],
   ["Size", "objR"],
 ];
-let addObjectCurrentsettings = new Map([
+let addObjectCurrentSettings = new Map([
   ["objX", 5],
   ["objY", 5],
   ["objM", 5],
@@ -79,20 +80,20 @@ function populateMenus() {
     let t = addObjectTemp.content.cloneNode(true);
     t.getElementById("name").innerText = e[0];
     let input = t.getElementById("input");
-    input.value = addObjectCurrentsettings.get(e[1]);
+    input.value = addObjectCurrentSettings.get(e[1]);
     input.onchange = () => {
-      addObjectCurrentsettings.set(e[1], parseFloat(input.value));
+      addObjectCurrentSettings.set(e[1], parseFloat(input.value));
     };
     addObjectMenu.appendChild(t);
   });
 
   addObjectButton.onclick = () => {
-    let x = addObjectMenu.querySelector("objX");
-    let y = addObjectMenu.querySelector("objY");
-    let m = addObjectMenu.querySelector("objM");
-    let r = addObjectMenu.querySelector("objR");
+    let x = addObjectCurrentSettings.get("objX");
+    let y = addObjectCurrentSettings.get("objY");
+    let m = addObjectCurrentSettings.get("objM");
+    let r = addObjectCurrentSettings.get("objR");
     if (x && y && r && m) {
-      window.addObject(x, y, r, m);
+      window.addObject(x, y, m, r);
     } else {
       window.addObject(0, 0, 5, 5);
     }

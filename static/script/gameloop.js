@@ -9,8 +9,8 @@ window.onresize = resizeCanvas;
 let count;
 let renderFunction = drawPlayer;
 
-let objCoord;
-let lineMap;
+// let objCoord;
+// let lineMap;
 async function loop(n) {
   n = n ? n : 0;
   objCoord = await window.requestObjectCoord(userInput);

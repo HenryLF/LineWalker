@@ -1,6 +1,7 @@
 package physic
 
 import (
+	"log"
 	"math"
 )
 
@@ -65,7 +66,14 @@ func movementForce(Input UserInput, grounded bool) Vect {
 	return out
 }
 
-func PFD(Obj *Object, Floor func(float64) float64, Input UserInput, delay float64) {
+func colisionForce(Obj Object, Col Object) Vect {
+	Energy := Obj.M * math.Pow(Obj.Speed.norm(), 2) / 2
+	Energy += Col.M * math.Pow(Col.Speed.norm(), 2) / 2
+	Energy /= 2
+	return (*Col.Coord).to(*Obj.Coord).unit().multiply(Energy * Const.ElasticColision)
+}
+
+func PFD(Obj *Object, Floor func(float64) float64, Input UserInput, Colision []Object, delay float64) {
 	delay = math.Min(delay, Const.MaxTimeDelay)
 	Obj.SetMetaData("delay", delay)
 	grounded := contact(*Obj, Floor)
@@ -74,16 +82,25 @@ func PFD(Obj *Object, Floor func(float64) float64, Input UserInput, delay float6
 	ResultingForce = ResultingForce.add(frictionForce(*Obj, grounded))
 	ResultingForce = ResultingForce.add(movementForce(Input, grounded))
 	ResultingForce = ResultingForce.add(reactiveForce(Floor, *Obj, ResultingForce))
+	// col := Vect{}
+	if len(Colision) > 0 {
+		for _, colider := range Colision {
+			k := colisionForce(*Obj, colider)
+			log.Println(k)
+			ResultingForce = ResultingForce.add(k)
+		}
+	}
+
 	ResultingForce = ResultingForce.multiply(1 / Obj.M)
 	//Cap
 	newSpeed := Obj.Speed.apply(ResultingForce, delay)
 	newSpeedN := newSpeed.norm()
 	if newSpeedN > Const.CapSpeed {
 		Obj.SetMetaData("SpeedCaped", true)
-		newSpeed = newSpeed.multiply(Const.CapSpeed / newSpeedN)
+		newSpeed = newSpeed.unit().multiply(Const.CapSpeed)
 	}
-	*Obj.Speed = newSpeed
-	*Obj.Coord = Obj.Coord.apply(*(Obj.Speed), delay)
+	*(Obj.Speed) = newSpeed
+	*(Obj.Coord) = Obj.Coord.apply(*(Obj.Speed), delay)
 	grounded = contact(*Obj, Floor)
 	if grounded {
 		Obj.ground(Floor)

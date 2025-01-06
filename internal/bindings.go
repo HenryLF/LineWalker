@@ -16,23 +16,28 @@ func (P *PlayerView) SetSize(w, h int) {
 	P.Width = w
 	P.Height = h
 }
+
 func (P *PlayerView) SetCoord(x, y int) {
 	P.X = x
 	P.Y = y
 }
 
-func parseUserInput(M map[string]any) physic.UserInput {
+func (P *PlayerView) Center(Obj physic.Object) {
+	P.X = int(Obj.Coord.X) - P.Width/2
+	P.Y = int(Obj.Coord.Y) - P.Height/2
+}
+func parseUserInput(M map[string]bool) physic.UserInput {
 	out := physic.UserInput{}
 	for k, it := range M {
 		switch k {
 		case "Down":
-			out.Down = it.(bool)
+			out.Down = it
 		case "Left":
-			out.Left = it.(bool)
+			out.Left = it
 		case "Right":
-			out.Right = it.(bool)
+			out.Right = it
 		case "Up":
-			out.Up = it.(bool)
+			out.Up = it
 
 		}
 	}
@@ -61,13 +66,17 @@ func RegisterBindings(w webview.WebView) {
 var CurrentView = PlayerView{X: 0, Y: 0, Width: 300, Height: 300}
 var N int = 0
 
-func requestObjectCoord(M map[string]any) []physic.Object {
+func requestObjectCoord(M map[string]bool) []physic.Object {
 	Input := parseUserInput(M)
+	Colision := physic.CurrentState.ColisionMap()
 	for k, obj := range physic.CurrentState.Obj {
-		physic.PFD(&obj, worldmap.CurrentMap.Generate, Input, physic.CurrentState.TimeElapsed())
 		if k == 0 {
-			CurrentView.SetCoord(int(obj.Coord.X)-CurrentView.Width/2, int(obj.Coord.Y)-CurrentView.Height/2)
+			physic.PFD(&obj, worldmap.CurrentMap.Generate, Input, Colision[k], physic.CurrentState.TimeElapsed())
+			CurrentView.Center(obj)
+		} else {
+			physic.PFD(&obj, worldmap.CurrentMap.Generate, physic.UserInput{}, Colision[k], physic.CurrentState.TimeElapsed())
 		}
+
 		obj.SetScreenCoord(CurrentView.X, CurrentView.Y)
 	}
 	physic.CurrentState.Time = time.Now()

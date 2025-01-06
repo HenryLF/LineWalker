@@ -1,6 +1,6 @@
 build :
 	go mod tidy
-	go build -o LineWalker.
+	go build -o LineWalker
 
 run :
 	go run .

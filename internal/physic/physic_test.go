@@ -22,7 +22,7 @@ func (Obj Object) log(t *testing.T) {
 	Mass : %v
 	Radius : %v
 	Screen : %v
-	Meta : %v`, &Obj, *Obj.Coord, *Obj.Speed, Obj.M, Obj.R, *Obj.ScreenCoord, Obj.Meta)
+	Meta : %v`, &Obj, *Obj.Coord, *Obj.Speed, Obj.M, Obj.R, *Obj.ScreenCoord, *Obj.meta)
 }
 func TestObject(t *testing.T) {
 	ExObject.log(t)
@@ -135,4 +135,13 @@ func TestAddObject(t *testing.T) {
 	CurrentState.AddObject(0, 0, 30, 30)
 	t.Log(CurrentState.Obj)
 
+}
+
+func TestColisionMap(t *testing.T) {
+	CurrentState.AddObject(500, 0, 1, 5)
+	CurrentState.AddObject(0, 100, 2, 5)
+	CurrentState.AddObject(0, 100, 3, 5)
+
+	t.Log(CurrentState.Obj[0].Coord.X, CurrentState.Obj[1].Coord.X)
+	t.Log(CurrentState.ColisionMap())
 }
