@@ -8,15 +8,19 @@ const userInput = {
 window.addEventListener("keydown", (e) => {
   switch (e.key) {
     case "ArrowUp":
+      e.preventDefault()
       userInput.Up = true;
       break;
     case "ArrowDown":
+      e.preventDefault()
       userInput.Down = true;
       break;
     case "ArrowLeft":
+      e.preventDefault()
       userInput.Left = true;
       break;
     case "ArrowRight":
+      e.preventDefault()
       userInput.Right = true;
       break;
   }

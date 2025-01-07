@@ -43,10 +43,10 @@ func RegisterBindings(w webview.WebView) {
 
 	w.Bind("addObject", physic.CurrentState.AddObject)
 
-}
+	w.Bind("setPlayerView", CurrentView.Set)
+	w.Bind("getPlayerView", CurrentView.Get)
 
-var CurrentView = PlayerView{X: 0, Y: 0, Width: 300, Height: 300}
-var N int = 0
+}
 
 func requestObjectCoord(M map[string]bool) []physic.Object {
 	Input := parseUserInput(M)

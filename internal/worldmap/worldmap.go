@@ -7,12 +7,12 @@ import (
 	"github.com/aquilax/go-perlin"
 )
 
-const b = 2
-const a = 2
-const n = 2
+const db = 2
+const da = 2
+const dn = 2
 
-const ScaleX float64 = 2000
-const ScaleY float64 = 1500
+const dScaleX float64 = 2000
+const dScaleY float64 = 1500
 
 type WorldMap struct {
 	A, B, Y0, ScaleX, ScaleY float64
@@ -24,8 +24,8 @@ type WorldMap struct {
 type Response map[int]int
 
 func newPerlin() WorldMap {
-	var out = WorldMap{A: a, B: b, Y0: 0, ScaleX: ScaleX, ScaleY: ScaleY}
-	out.Generator = perlin.NewPerlin(a, b, n, rand.Int63())
+	var out = WorldMap{A: da, B: db, Y0: 0, ScaleX: dScaleX, ScaleY: dScaleY}
+	out.Generator = perlin.NewPerlin(da, db, dn, rand.Int63())
 	return out
 }
 

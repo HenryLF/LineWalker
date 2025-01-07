@@ -10,10 +10,8 @@ func gravityForce(Obj Object) Vect {
 
 func reactiveForce(Floor func(float64) float64, Obj Object, R Vect) Vect {
 	if contact(Obj, Floor) {
-		ang := -angleOf(Floor, Obj.Coord.X)
-		out := Vect{X: R.norm() * math.Cos(ang), Y: R.norm() * math.Sin(ang)}
-		// log.Println(out, out.rot())
-		return out.rot()
+		out := vectOf(Floor, Obj.Coord.X).rot()
+		return out.multiply(-R.norm())
 	} else {
 		return Vect{X: 0, Y: 0}
 	}
@@ -30,8 +28,12 @@ func contact(Obj Object, Floor func(float64) float64) bool {
 	return Obj.Coord.Y+Obj.R >= Floor(Obj.Coord.X)
 }
 
-func angleOf(Floor func(float64) float64, x float64) float64 {
-	return math.Atan((Floor(x+Const.DX) - Floor(x-Const.DX)) / (2 * Const.DX))
+func vectOf(Floor func(float64) float64, x float64) Vect {
+	out := Vect{
+		X: 2 * Const.DX,
+		Y: Floor(x+Const.DX) - Floor(x-Const.DX),
+	}
+	return out.unit()
 }
 
 func (Obj *Object) ground(Floor func(float64) float64) {
@@ -45,28 +47,30 @@ func colisionForce(Obj Object, Col Object) Vect {
 	return (*Col.Coord).to(*Obj.Coord).unit().multiply(Energy * Const.ElasticColision)
 }
 
-func movementForce(Input UserInput, grounded bool) Vect {
-	out := Vect{}
+func movementForce(Obj Object, Input UserInput, Floor func(float64) float64, grounded bool) Vect {
+	slope := vectOf(Floor, Obj.Coord.X)
+	var out Vect
 	if Input.Up && grounded {
-		out = out.add(Vect{X: 0, Y: -Const.VerticalAcc})
-		return out
+		out = Vect{0, -1}
+		return out.multiply(Const.VerticalAcc)
 	}
 	if Input.Right {
 		if grounded {
-			out = out.add(Vect{X: Const.LateralAcc, Y: 0})
+			out = out.add(slope.multiply(Const.LateralAcc))
 		} else {
-			out = out.add(Vect{X: Const.LateralAirAcc, Y: 0})
+			out = out.add(slope.multiply(Const.LateralAirAcc))
 		}
 	}
 	if Input.Left && grounded {
 		if grounded {
-			out = out.add(Vect{X: -Const.LateralAcc, Y: 0})
+			out = out.add(slope.multiply(-Const.LateralAcc))
 		} else {
-			out = out.add(Vect{X: -Const.LateralAirAcc, Y: 0})
+			out = out.add(slope.multiply(-Const.LateralAirAcc))
 		}
 	}
 	if Input.Down && !grounded {
-		out = out.add(Vect{X: 0, Y: Const.VerticalAcc})
+		out = Vect{0, 1}
+		return out.multiply(Const.VerticalAccDown)
 	}
 	return out
 }

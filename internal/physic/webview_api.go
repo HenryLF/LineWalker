@@ -1,7 +1,6 @@
 package physic
 
 import (
-	"errors"
 	"log"
 	"reflect"
 )
@@ -70,7 +69,7 @@ func (C *Constants) Set(s string, a float64) any {
 		return a
 	}
 	log.Println("Error setting", s)
-	return errors.New("trying to set unadressable field")
+	return C.Get(s)
 }
 
 func (C *Constants) Get(s string) float64 {

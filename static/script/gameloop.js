@@ -33,8 +33,6 @@ async function loop(n) {
   );
 }
 
-const physicDiv = document.getElementById("physic");
-const mapDiv = document.getElementById("map");
 
 document.addEventListener("DOMContentLoaded", () => {
   resizeCanvas();

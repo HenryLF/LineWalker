@@ -1,6 +1,10 @@
 const settingsTemp = document.getElementById("settings-temp");
 const addObjectTemp = document.getElementById("add-object-temp");
 
+const physicDiv = document.getElementById("physic");
+const mapDiv = document.getElementById("map");
+const globalDiv = document.getElementById("global");
+
 const addObjectButton = document.getElementById("add-object-button");
 const addObjectMenu = document.getElementById("add-object-menu");
 
@@ -12,10 +16,16 @@ let physicSettings = [
   ["Player AccelerationX (Ground)", "LateralAcc"],
   ["Player AccelerationX (Air)", "LateralAirAcc"],
   ["Player AccelerationY (Ground)", "VerticalAcc"],
+  ["Player AccelerationY (Air Down)", "VerticalAccDown"],
   ["Max Speed", "CapSpeed"],
   ["Slow Motion", "TimeSlow"],
   ["Max time step", "MaxTimeDelay"],
   ["Colision Energy Transfert", "ElasticColision"],
+];
+
+let globalSettings = [
+  ["GlobalScaleX", "ScaleX"],
+  ["GlobalScaleY", "ScaleY"],
 ];
 
 let mapSettings = [
@@ -45,12 +55,18 @@ let addObjectCurrentSettings = new Map([
   ["objR", 5],
 ]);
 
-function populateSetting(name, callBackString, callbackGet, callbackSet) {
+function populateSetting(
+  name,
+  callBackString,
+  callbackGet,
+  callbackSet,
+  asInt
+) {
   let t = settingsTemp.content.cloneNode(true);
   t.getElementById("name").innerText = name;
   let input = t.getElementById("input");
   t.getElementById("set").onclick = async () => {
-    let val = parseFloat(input.value);
+    let val = asInt ? parseInt(input.value) : parseFloat(input.value);
     let k;
     if (val) {
       k = await callbackSet(callBackString, val);
@@ -66,11 +82,19 @@ function populateMenus() {
   mapSettings.map((e) => {
     mapDiv.appendChild(populateSetting(...e, window.getMap, window.setMap));
   });
+
   physicSettings.map((e) => {
     physicDiv.appendChild(
       populateSetting(...e, window.getPhysic, window.setPhysic)
     );
   });
+
+  globalSettings.map((e) => {
+    globalDiv.appendChild(
+      populateSetting(...e, window.getPlayerView, window.setPlayerView, true)
+    );
+  });
+
   for (let i of document.querySelectorAll("#set")) {
     if (i.onclick) {
       i.onclick();
