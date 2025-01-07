@@ -23,7 +23,7 @@ func ConvertMapToStruct(m map[string]interface{}, s interface{}) error {
 func main() {
 	w := webview.New(true)
 	defer w.Destroy()
-	w.SetTitle("Basic Example")
+	w.SetTitle("Line Walker")
 	w.SetSize(1080, 1080, webview.HintNone)
 	bindings.RegisterBindings(w)
 	url, _ := filepath.Abs("./static/index.html")
