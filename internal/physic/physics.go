@@ -50,9 +50,16 @@ func colisionForce(Obj Object, Col Object) Vect {
 func movementForce(Obj Object, Input UserInput, Floor func(float64) float64, grounded bool) Vect {
 	slope := vectOf(Floor, Obj.Coord.X)
 	var out Vect
+
 	if Input.Up && grounded {
-		out = Vect{0, -1}
-		return out.multiply(Const.VerticalAcc)
+		out = (Vect{0, -1}).multiply(Const.VerticalAcc)
+		if Input.Right {
+			return out.add(slope.multiply(Const.LateralAcc))
+		} else if Input.Left {
+			return out.add(slope.multiply(-Const.LateralAcc))
+		} else {
+			return out
+		}
 	}
 	if Input.Right {
 		if grounded {
@@ -61,7 +68,7 @@ func movementForce(Obj Object, Input UserInput, Floor func(float64) float64, gro
 			out = out.add(slope.multiply(Const.LateralAirAcc))
 		}
 	}
-	if Input.Left && grounded {
+	if Input.Left {
 		if grounded {
 			out = out.add(slope.multiply(-Const.LateralAcc))
 		} else {
