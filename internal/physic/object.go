@@ -28,7 +28,7 @@ type Object struct {
 func (Obj *Object) ScreenCoordFromTransform(t func(x, y float64) (int, int)) {
 	x, y := t(Obj.Coord.X, Obj.Coord.Y)
 	*Obj.ScreenCoord = VectInt{X: x, Y: y}
-	x, y = t(Obj.R, Obj.R)
+	x, y = t(Obj.R+Obj.Coord.X, Obj.R+Obj.Coord.Y)
 	if x > y {
 		Obj.ScreenR = x
 	} else {
