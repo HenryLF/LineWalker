@@ -6,11 +6,10 @@ function resizeCanvas() {
 resizeCanvas();
 window.onresize = resizeCanvas;
 
-let count;
-let renderFunction = drawPlayer;
 
 // let objCoord;
 // let lineMap;
+let renderFunction = drawPlayer;
 async function loop(n) {
   n = n ? n : 0;
   objCoord = await window.requestObjectCoord(userInput);
@@ -37,6 +36,7 @@ async function loop(n) {
 document.addEventListener("DOMContentLoaded", () => {
   resizeCanvas();
   populateMenus();
+  document.getElementById("soundtrack").play()
 });
 
 setTimeout(loop, 500, 0);

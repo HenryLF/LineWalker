@@ -9,3 +9,7 @@ push :
 	git add .
 	git commit -a
 	git push
+
+pull :
+	git pull
+	make build
