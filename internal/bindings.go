@@ -8,6 +8,8 @@ import (
 	webview "github.com/webview/webview_go"
 )
 
+var CurrentState = physic.State{Time: time.Now(), Obj: []physic.Object{physic.NewObjectSide(500, 0, 5, 4500)}}
+
 func parseUserInput(M map[string]bool) physic.UserInput {
 	out := physic.UserInput{}
 	for k, it := range M {
@@ -38,26 +40,26 @@ func RegisterBindings(w webview.WebView) {
 	w.Bind("setMap", worldmap.CurrentMap.Set)
 	w.Bind("getMap", worldmap.CurrentMap.Get)
 
-	w.Bind("setObject", physic.CurrentState.Set)
-	w.Bind("getObject", physic.CurrentState.Get)
+	w.Bind("setObject", CurrentState.Set)
+	w.Bind("getObject", CurrentState.Get)
 
-	w.Bind("addObject", physic.CurrentState.AddObject)
+	w.Bind("addObject", CurrentState.AddObject)
 
 	w.Bind("setGlobals", CurrentView.Set)
 	w.Bind("getGlobals", CurrentView.Get)
 
-	w.Bind("setPlayer", physic.CurrentState.SetPlayer)
-	w.Bind("getPlayer", physic.CurrentState.GetPlayer)
+	w.Bind("setPlayer", CurrentState.SetPlayer)
+	w.Bind("getPlayer", CurrentState.GetPlayer)
 
 }
 
-func requestObjectCoord(M map[string]bool) []physic.ObjectInterface {
+func requestObjectCoord(M map[string]bool) []physic.Object {
 	Input := parseUserInput(M)
-	physic.CurrentState.UpdateState(Input, worldmap.CurrentMap.Generate, CurrentView.ScreenTransform)
-	CurrentView.Center(physic.CurrentState.Obj[0])
-	physic.CurrentState.ScreenCoordFromTransform(CurrentView.ScreenTransform)
-	physic.CurrentState.Time = time.Now()
-	return physic.CurrentState.Obj
+	CurrentState.UpdateState(Input, worldmap.CurrentMap.Generate, CurrentView.ScreenTransform)
+	CurrentView.Center(CurrentState.Obj[0])
+	CurrentState.ScreenCoordFromTransform(CurrentView.ScreenTransform)
+	CurrentState.Time = time.Now()
+	return CurrentState.Obj
 
 }
 

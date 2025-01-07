@@ -1,83 +1,84 @@
 package physic
 
 import (
+	"linewalker/internal/physic/vect"
 	"math"
 )
 
-func gravityForce(Obj Object) Vect {
-	return Vect{X: 0, Y: Obj.M * Const.G}
+func gravityForce(Obj ObjectSide) vect.Vect {
+	return vect.Vect{X: 0, Y: Obj.M * Const.G}
 }
 
-func reactiveForce(Floor func(float64) float64, Obj Object, R Vect) Vect {
+func reactiveForce(Floor func(float64) float64, Obj ObjectSide, R vect.Vect) vect.Vect {
 	if contact(Obj, Floor) {
-		out := vectOf(Floor, Obj.Coord.X).rot()
-		return out.multiply(-R.norm())
+		out := vectOf(Floor, Obj.Coord.X).Rot()
+		return out.Multiply(-R.Norm())
 	} else {
-		return Vect{X: 0, Y: 0}
+		return vect.Vect{X: 0, Y: 0}
 	}
 }
 
-func frictionForce(Obj Object, contact bool) Vect {
+func frictionForce(Obj ObjectSide, contact bool) vect.Vect {
 	if contact {
-		return (*Obj.Speed).multiply(-Const.FloorFrictionCoeff)
+		return (*Obj.Speed).Multiply(-Const.FloorFrictionCoeff)
 	}
-	return (*Obj.Speed).multiply(-Const.AirFrictionCoeff)
+	return (*Obj.Speed).Multiply(-Const.AirFrictionCoeff)
 }
 
-func contact(Obj Object, Floor func(float64) float64) bool {
+func contact(Obj ObjectSide, Floor func(float64) float64) bool {
 	return Obj.Coord.Y+Obj.R >= Floor(Obj.Coord.X)
 }
 
-func vectOf(Floor func(float64) float64, x float64) Vect {
-	out := Vect{
+func vectOf(Floor func(float64) float64, x float64) vect.Vect {
+	out := vect.Vect{
 		X: 2 * Const.DX,
 		Y: Floor(x+Const.DX) - Floor(x-Const.DX),
 	}
-	return out.unit()
+	return out.Unit()
 }
 
-func (Obj *Object) ground(Floor func(float64) float64) {
+func (Obj *ObjectSide) ground(Floor func(float64) float64) {
 	Obj.Coord.Y = math.Min(Floor(Obj.Coord.X)-Obj.R, Obj.Coord.Y)
 	Obj.Speed.Y = math.Min(Floor(Obj.Speed.Y), 0)
 }
-func colisionForce(Obj Object, Col Object) Vect {
-	Energy := Obj.M * math.Pow(Obj.Speed.norm(), 2) / 2
-	Energy += Col.M * math.Pow(Col.Speed.norm(), 2) / 2
+func colisionForce(Obj ObjectSide, Col ObjectSide) vect.Vect {
+	Energy := Obj.M * math.Pow(Obj.Speed.Norm(), 2) / 2
+	Energy += Col.M * math.Pow(Col.Speed.Norm(), 2) / 2
 	Energy /= 2
-	return (*Col.Coord).to(*Obj.Coord).unit().multiply(Energy * Const.ElasticColision)
+	return (*Col.Coord).To(*Obj.Coord).Unit().Multiply(Energy * Const.ElasticColision)
 }
 
-func movementForce(Obj Object, Input UserInput, Floor func(float64) float64, grounded bool) Vect {
+func movementForce(Obj ObjectSide, Input UserInput, Floor func(float64) float64, grounded bool) vect.Vect {
 	slope := vectOf(Floor, Obj.Coord.X)
-	var out Vect
+	var out vect.Vect
 
 	if Input.Up && grounded {
-		out = (Vect{0, -1}).multiply(Const.VerticalAcc)
+		out = (vect.Vect{X: 0, Y: -1}).Multiply(Const.VerticalAcc)
 		if Input.Right {
-			return out.add(slope.multiply(Const.LateralAcc))
+			return out.Add(slope.Multiply(Const.LateralAcc))
 		} else if Input.Left {
-			return out.add(slope.multiply(-Const.LateralAcc))
+			return out.Add(slope.Multiply(-Const.LateralAcc))
 		} else {
 			return out
 		}
 	}
 	if Input.Right {
 		if grounded {
-			out = out.add(slope.multiply(Const.LateralAcc))
+			out = out.Add(slope.Multiply(Const.LateralAcc))
 		} else {
-			out = out.add(slope.multiply(Const.LateralAirAcc))
+			out = out.Add(slope.Multiply(Const.LateralAirAcc))
 		}
 	}
 	if Input.Left {
 		if grounded {
-			out = out.add(slope.multiply(-Const.LateralAcc))
+			out = out.Add(slope.Multiply(-Const.LateralAcc))
 		} else {
-			out = out.add(slope.multiply(-Const.LateralAirAcc))
+			out = out.Add(slope.Multiply(-Const.LateralAirAcc))
 		}
 	}
 	if Input.Down {
-		out = Vect{0, 1}
-		return out.multiply(Const.VerticalAccDown)
+		out = vect.Vect{X: 0, Y: 1}
+		return out.Multiply(Const.VerticalAccDown)
 	}
 	return out
 }

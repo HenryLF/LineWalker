@@ -12,7 +12,9 @@ type UserInput struct {
 	Right bool `json:"Right"`
 }
 
-type ObjectInterface interface {
+type ObjectMetaData map[string]any
+
+type Object interface {
 	PFD(Floor func(float64) float64, Input UserInput, Colision []ObjectWithColision, delay float64)
 	ScreenCoordFromTransform(func(x, y float64) (a, b int))
 	SetMetaData(string, any)
@@ -35,7 +37,7 @@ type ObjectWithColision interface {
 
 type State struct {
 	Time time.Time
-	Obj  []ObjectInterface
+	Obj  []Object
 }
 
 func (S State) TimeElapsed() float64 {
@@ -91,4 +93,4 @@ func (S *State) ScreenCoordFromTransform(ScreenTransform func(float64, float64) 
 	}
 }
 
-var CurrentState = State{Time: time.Now(), Obj: []ObjectInterface{NewObject(500, 0, 5, 4500)}}
+var NoColision = make([]ObjectWithColision, 0)

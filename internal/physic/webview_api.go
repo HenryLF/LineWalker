@@ -2,10 +2,13 @@ package physic
 
 import (
 	"encoding/json"
+	"linewalker/internal/physic/vect"
 	"log"
 )
 
-type CustomObject = Object
+type CustomObject = ObjectSide
+
+//Not Generic ! Specific of Objet implementation
 
 func (S *State) Set(n int, s string, c ...json.Number) any {
 	if n < 0 || n > len(S.Obj) || len(c) == 0 {
@@ -24,24 +27,19 @@ func (S *State) Set(n int, s string, c ...json.Number) any {
 		}
 		a = append(a, A)
 	}
-	v := new(Vect)
 	switch s {
 	case "Coord":
 		if len(a) > 1 {
-			v.X = a[0]
-			v.Y = a[1]
-			Obj.Coord = v
+			Obj.Coord = &vect.Vect{X: a[0], Y: a[1]}
 		}
 	case "Speed":
 		if len(a) > 1 {
-			v.X = a[0]
-			v.Y = a[1]
-			Obj.Speed = v
+			Obj.Coord = &vect.Vect{X: a[0], Y: a[1]}
 		}
 	case "M":
 		Obj.M = a[0]
 	case "R":
-		Obj.R = a[1]
+		Obj.R = a[0]
 	}
 	return S.Get(n, s)
 }
@@ -78,7 +76,7 @@ func (S *State) Get(n int, s string) any {
 	Obj := S.Obj[n]
 	switch s {
 	case "Coord":
-		return Vect{Obj.X(), Obj.Y()}
+		return vect.Vect{X: Obj.X(), Y: Obj.Y()}
 	case "M":
 		return Obj.Mass()
 	case "R":
@@ -103,7 +101,7 @@ func (S *State) GetPlayer(s string) any {
 }
 
 func (S *State) AddObject(X, Y, M, R float64) bool {
-	k := NewObject(X, Y, M, R)
+	k := NewObjectSide(X, Y, M, R)
 	S.Obj = append(S.Obj, k)
 	log.Println("New Object", k, S)
 

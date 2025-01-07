@@ -35,7 +35,7 @@ func (P PlayerView) ScreenTransformY(y float64) int {
 	return (int(y) - P.Y) / P.ScaleY
 }
 
-func (P *PlayerView) Center(Obj physic.ObjectInterface) {
+func (P *PlayerView) Center(Obj physic.Object) {
 	P.X = int(Obj.X()) - P.ScaleX*P.Width/2
 	P.Y = int(Obj.Y()) - P.ScaleY*P.Height/2
 }
