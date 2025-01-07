@@ -24,6 +24,12 @@ func (Obj Object) X() float64 {
 func (Obj Object) Y() float64 {
 	return Obj.Coord.Y
 }
+func (Obj Object) Mass() float64 {
+	return Obj.M
+}
+func (Obj Object) Radius() float64 {
+	return Obj.R
+}
 
 func (Obj *Object) ScreenCoordFromTransform(t func(x, y float64) (int, int)) {
 	x, y := t(Obj.Coord.X, Obj.Coord.Y)

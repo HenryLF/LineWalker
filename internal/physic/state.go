@@ -18,6 +18,8 @@ type ObjectInterface interface {
 	SetMetaData(string, any)
 	X() float64
 	Y() float64
+	Mass() float64
+	Radius() float64
 }
 
 type ObjectWithColision interface {
@@ -25,6 +27,10 @@ type ObjectWithColision interface {
 	ScreenCoordFromTransform(func(x, y float64) (a, b int))
 	SetMetaData(string, any)
 	Colide(ObjectWithColision) bool
+	X() float64
+	Y() float64
+	Mass() float64
+	Radius() float64
 }
 
 type State struct {

@@ -75,37 +75,28 @@ func (S *State) Get(n int, s string) any {
 	if n < 0 || n > len(S.Obj) {
 		return nil
 	}
-	Obj, ok := interface{}(S.Obj[n]).(CustomObject)
-	if !ok {
-		return nil
-	}
-
+	Obj := S.Obj[n]
 	switch s {
 	case "Coord":
-		return Obj.Coord
-	case "Speed":
-		return Obj.Speed
+		return Vect{Obj.X(), Obj.Y()}
 	case "M":
-		return Obj.M
+		return Obj.Mass()
 	case "R":
-		return Obj.R
+		return Obj.Radius()
 	}
 	return nil
 }
 func (S *State) GetPlayer(s string) any {
-	Obj, ok := interface{}(S.Obj[0]).(CustomObject)
-	if !ok {
-		return nil
-	}
+	Obj := S.Obj[0]
 	switch s {
 	case "X":
-		return Obj.Coord.X
+		return Obj.X()
 	case "Y":
-		return Obj.Coord.X
+		return Obj.Y()
 	case "M":
-		return Obj.M
+		return Obj.Mass()
 	case "R":
-		return Obj.R
+		return Obj.Radius()
 	}
 	log.Println("No property ", s)
 	return nil
