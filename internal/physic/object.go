@@ -4,13 +4,6 @@ import (
 	"math"
 )
 
-type UserInput struct {
-	Up    bool `json:"Up"`
-	Left  bool `json:"Left"`
-	Down  bool `json:"Down"`
-	Right bool `json:"Right"`
-}
-
 type ObjectMetaData map[string]any
 
 type Object struct {
@@ -24,6 +17,14 @@ type Object struct {
 	Meta *ObjectMetaData
 }
 
+func (Obj Object) X() float64 {
+	return Obj.Coord.X
+}
+
+func (Obj Object) Y() float64 {
+	return Obj.Coord.Y
+}
+
 func (Obj *Object) ScreenCoordFromTransform(t func(x, y float64) (int, int)) {
 	x, y := t(Obj.Coord.X, Obj.Coord.Y)
 	*Obj.ScreenCoord = VectInt{X: x, Y: y}
@@ -33,7 +34,7 @@ func (Obj *Object) SetMetaData(s string, v any) {
 	(*Obj.Meta)[s] = v
 }
 
-func NewObject(X, Y, M, R float64) Object {
+func NewObject(X, Y, M, R float64) *Object {
 	var out Object
 	out.Coord = new(Vect)
 	*(out.Coord) = Vect{X: X, Y: Y}
@@ -44,14 +45,14 @@ func NewObject(X, Y, M, R float64) Object {
 	meta := make(ObjectMetaData)
 	out.Meta = &meta
 	(*out.Meta)["Created"] = true
-	return out
+	return &out
 }
 
-func ObjectColide(A, B Object) bool {
+func (A Object) Colide(B Object) bool {
 	return dist(*A.Coord, *B.Coord) <= (A.R + B.R)
 }
 
-func (Obj *Object) PFD(Floor func(float64) float64, Input UserInput, Colision []Object, delay float64) {
+func (Obj *Object) PFD(Floor func(float64) float64, Input UserInput, Colision []ObjectWithColision, delay float64) {
 	delay = math.Min(delay, Const.MaxTimeDelay)
 	Obj.SetMetaData("delay", delay)
 	grounded := contact(*Obj, Floor)
@@ -61,10 +62,13 @@ func (Obj *Object) PFD(Floor func(float64) float64, Input UserInput, Colision []
 	ResultingForce = ResultingForce.add(reactiveForce(Floor, *Obj, ResultingForce))
 	ResultingForce = ResultingForce.add(movementForce(*Obj, Input, Floor, grounded))
 
-	if len(Colision) > 0 {
+	if A, ok := interface{}(Obj).(Object); len(Colision) > 0 && ok {
 		for _, colider := range Colision {
-			k := colisionForce(*Obj, colider)
-			ResultingForce = ResultingForce.add(k)
+			B, ok := interface{}(colider).(Object)
+			if ok {
+				k := colisionForce(A, B)
+				ResultingForce = ResultingForce.add(k)
+			}
 		}
 	} else {
 		Obj.SetMetaData("Colision", false)

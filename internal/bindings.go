@@ -51,7 +51,7 @@ func RegisterBindings(w webview.WebView) {
 
 }
 
-func requestObjectCoord(M map[string]bool) []physic.Object {
+func requestObjectCoord(M map[string]bool) []physic.ObjectInterface {
 	Input := parseUserInput(M)
 	physic.CurrentState.UpdateState(Input, worldmap.CurrentMap.Generate, CurrentView.ScreenTransform)
 	CurrentView.Center(physic.CurrentState.Obj[0])
