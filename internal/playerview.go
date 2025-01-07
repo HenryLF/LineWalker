@@ -6,6 +6,10 @@ import (
 	"log"
 )
 
+// Default value
+const dScaleX int = 200
+const dScaleY int = 200
+
 type PlayerView struct {
 	X, Y, Width, Height int
 	ScaleX, ScaleY      int
@@ -20,9 +24,6 @@ func (P *PlayerView) SetCoord(x, y int) {
 	P.X = x
 	P.Y = y
 }
-
-const dScaleX int = 1
-const dScaleY int = 1
 
 func (P PlayerView) ScreenTransform(x, y float64) (int, int) {
 	return (int(x) - P.X) / P.ScaleX, (int(y) - P.Y) / P.ScaleY
