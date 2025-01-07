@@ -2,20 +2,11 @@ package physic
 
 import (
 	"encoding/json"
-	"linewalker/internal/physic/vect"
 	"log"
 )
 
-type CustomObject = ObjectSide
-
-//Not Generic ! Specific of Objet implementation
-
 func (S *State) Set(n int, s string, c ...json.Number) any {
 	if n < 0 || n > len(S.Obj) || len(c) == 0 {
-		return nil
-	}
-	Obj, ok := interface{}(S.Obj[n]).(CustomObject)
-	if !ok {
 		return nil
 	}
 	a := []float64{}
@@ -27,19 +18,24 @@ func (S *State) Set(n int, s string, c ...json.Number) any {
 		}
 		a = append(a, A)
 	}
+	v := new(Vect)
 	switch s {
 	case "Coord":
 		if len(a) > 1 {
-			Obj.Coord = &vect.Vect{X: a[0], Y: a[1]}
+			v.X = a[0]
+			v.Y = a[1]
+			S.Obj[n].Coord = v
 		}
 	case "Speed":
 		if len(a) > 1 {
-			Obj.Coord = &vect.Vect{X: a[0], Y: a[1]}
+			v.X = a[0]
+			v.Y = a[1]
+			S.Obj[n].Speed = v
 		}
 	case "M":
-		Obj.M = a[0]
+		S.Obj[n].M = a[0]
 	case "R":
-		Obj.R = a[0]
+		S.Obj[n].R = a[1]
 	}
 	return S.Get(n, s)
 }
@@ -49,20 +45,16 @@ func (S *State) SetPlayer(s string, a json.Number) any {
 	if err != nil || c == 0 {
 		log.Printf("Error setting %v with value %v\n", s, a)
 	}
-	Obj, ok := interface{}(S.Obj).(CustomObject)
-	if !ok {
-		return nil
-	}
 	log.Printf("Setting Player %v from %v to %v\n", s, S.GetPlayer(s), c)
 	switch s {
 	case "X":
-		Obj.Coord.X = c
+		S.Obj[0].Coord.X = c
 	case "Y":
-		Obj.Coord.X = c
+		S.Obj[0].Coord.X = c
 	case "M":
-		Obj.M = c
+		S.Obj[0].M = c
 	case "R":
-		Obj.R = c
+		S.Obj[0].R = c
 	default:
 		log.Println("Error setting", s)
 	}
@@ -73,35 +65,36 @@ func (S *State) Get(n int, s string) any {
 	if n < 0 || n > len(S.Obj) {
 		return nil
 	}
-	Obj := S.Obj[n]
+	k := S.Obj[n]
 	switch s {
 	case "Coord":
-		return vect.Vect{X: Obj.X(), Y: Obj.Y()}
+		return *k.Coord
+	case "Speed":
+		return *k.Speed
 	case "M":
-		return Obj.Mass()
+		return k.M
 	case "R":
-		return Obj.Radius()
+		return k.R
 	}
 	return nil
 }
 func (S *State) GetPlayer(s string) any {
-	Obj := S.Obj[0]
 	switch s {
 	case "X":
-		return Obj.X()
+		return S.Obj[0].Coord.X
 	case "Y":
-		return Obj.Y()
+		return S.Obj[0].Coord.X
 	case "M":
-		return Obj.Mass()
+		return S.Obj[0].M
 	case "R":
-		return Obj.Radius()
+		return S.Obj[0].R
 	}
 	log.Println("No property ", s)
 	return nil
 }
 
 func (S *State) AddObject(X, Y, M, R float64) bool {
-	k := NewObjectSide(X, Y, M, R)
+	k := NewObject(X, Y, M, R)
 	S.Obj = append(S.Obj, k)
 	log.Println("New Object", k, S)
 

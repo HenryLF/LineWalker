@@ -5,36 +5,6 @@ import (
 	"time"
 )
 
-type UserInput struct {
-	Up    bool `json:"Up"`
-	Left  bool `json:"Left"`
-	Down  bool `json:"Down"`
-	Right bool `json:"Right"`
-}
-
-type ObjectMetaData map[string]any
-
-type Object interface {
-	PFD(Floor func(float64) float64, Input UserInput, Colision []ObjectWithColision, delay float64)
-	ScreenCoordFromTransform(func(x, y float64) (a, b int))
-	SetMetaData(string, any)
-	X() float64
-	Y() float64
-	Mass() float64
-	Radius() float64
-}
-
-type ObjectWithColision interface {
-	PFD(Floor func(float64) float64, Input UserInput, Colision []ObjectWithColision, delay float64)
-	ScreenCoordFromTransform(func(x, y float64) (a, b int))
-	SetMetaData(string, any)
-	Colide(ObjectWithColision) bool
-	X() float64
-	Y() float64
-	Mass() float64
-	Radius() float64
-}
-
 type State struct {
 	Time time.Time
 	Obj  []Object
@@ -45,23 +15,16 @@ func (S State) TimeElapsed() float64 {
 	return (out) / (1000 * Const.TimeSlow)
 }
 
-func (S *State) ColisionMap() map[int][]ObjectWithColision {
+func (S *State) ColisionMap() map[int][]Object {
 	if len(S.Obj) < 2 {
-		return map[int][]ObjectWithColision{}
+		return map[int][]Object{}
 	}
-	out := make(map[int][]ObjectWithColision)
+	out := make(map[int][]Object)
 	meta := map[int][]int{}
 	for j, A := range S.Obj[:len(S.Obj)-1] {
-		A, ok := interface{}(A).(ObjectWithColision)
-		if !ok {
-			continue
-		}
 		for k := 1; k < len(S.Obj)-j; k++ {
-			B, ok := interface{}(S.Obj[j+k]).(ObjectWithColision)
-			if !ok {
-				continue
-			}
-			if A.Colide(B) {
+			B := S.Obj[j+k]
+			if ObjectColide(A, B) {
 				out[j] = append(out[j], B)
 				out[j+k] = append(out[j+k], A)
 				meta[j] = append(meta[j], j+k)
@@ -93,4 +56,4 @@ func (S *State) ScreenCoordFromTransform(ScreenTransform func(float64, float64) 
 	}
 }
 
-var NoColision = make([]ObjectWithColision, 0)
+var CurrentState = State{Time: time.Now(), Obj: []Object{NewObject(500, 0, 5, 4500)}}
