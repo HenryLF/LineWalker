@@ -100,7 +100,6 @@ func (C *Constants) Set(s string, c json.Number) any {
 }
 
 func (C *Constants) Get(s string) any {
-	log.Println(s)
 	switch s {
 	case "G":
 		return C.G
