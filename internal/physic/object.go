@@ -21,7 +21,7 @@ type Object struct {
 	M, R float64
 
 	ScreenCoord *VectInt
-	ScreenR     int
+	ScreenR     *int
 
 	Meta *ObjectMetaData
 }
@@ -32,9 +32,9 @@ func (Obj *Object) ScreenCoordFromTransform(t func(x, y float64) (int, int)) {
 	x, y = t(Obj.R+Obj.Coord.X, Obj.R+Obj.Coord.Y)
 	log.Println(x, y)
 	if x > y {
-		Obj.ScreenR = x
+		*Obj.ScreenR = x
 	} else {
-		Obj.ScreenR = y
+		*Obj.ScreenR = y
 	}
 }
 
@@ -48,6 +48,7 @@ func NewObject(X, Y, M, R float64) Object {
 	*(out.Coord) = Vect{X: X, Y: Y}
 	out.Speed = new(Vect)
 	out.ScreenCoord = new(VectInt)
+	out.ScreenR = new(int)
 	out.M = M
 	out.R = R
 	meta := make(ObjectMetaData)
