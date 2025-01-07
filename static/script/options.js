@@ -15,8 +15,8 @@ let physicSettings = [
   ["Slope Angle DX", "DX"],
   ["Player AccelerationX (Ground)", "LateralAcc"],
   ["Player AccelerationX (Air)", "LateralAirAcc"],
-  ["Player AccelerationY (Ground)", "VerticalAcc"],
-  ["Player AccelerationY (Air Down)", "VerticalAccDown"],
+  ["Player AccelerationY (Up,Ground)", "VerticalAcc"],
+  ["Player AccelerationY (Down)", "VerticalAccDown"],
   ["Max Speed", "CapSpeed"],
   ["Slow Motion", "TimeSlow"],
   ["Max time step", "MaxTimeDelay"],
@@ -27,6 +27,12 @@ let globalSettings = [
   ["GlobalScaleX", "ScaleX"],
   ["GlobalScaleY", "ScaleY"],
 ];
+let globalPlayerSettings = [
+  ["Player Size", "R"],
+  ["Player Mass", "M"],
+  ["Player X", "X"],
+  ["Player Y", "Y"],
+];
 
 let mapSettings = [
   ["Alpha", "A"],
@@ -36,12 +42,6 @@ let mapSettings = [
   ["Altitude", "Y0"],
 ];
 
-let playerSettings = [
-  ["X :", "X"],
-  ["Y :", "Y"],
-  ["Masse", "M"],
-  ["Size", "R"],
-];
 let addObjectSettings = [
   ["X :", "objX"],
   ["Y :", "objY"],
@@ -60,13 +60,17 @@ function populateSetting(
   callBackString,
   callbackGet,
   callbackSet,
-  asInt
+  className
 ) {
   let t = settingsTemp.content.cloneNode(true);
   t.getElementById("name").innerText = name;
   let input = t.getElementById("input");
+  if (className) {
+    input.className += className;
+    console.log(input.className)
+  }
   t.getElementById("set").onclick = async () => {
-    let val = asInt ? parseInt(input.value) : parseFloat(input.value);
+    let val = parseFloat(input.value);
     let k;
     if (val) {
       k = await callbackSet(callBackString, val);
@@ -91,7 +95,13 @@ function populateMenus() {
 
   globalSettings.map((e) => {
     globalDiv.appendChild(
-      populateSetting(...e, window.getGlobals, window.setGlobals, true)
+      populateSetting(...e, window.getGlobals, window.setGlobals,e[1])
+    );
+  });
+
+  globalPlayerSettings.map((e) => {
+    globalDiv.appendChild(
+      populateSetting(...e, window.getPlayer, window.setPlayer)
     );
   });
 
@@ -116,8 +126,9 @@ function populateMenus() {
     let y = addObjectCurrentSettings.get("objY");
     let m = addObjectCurrentSettings.get("objM");
     let r = addObjectCurrentSettings.get("objR");
+    let scale  = Math.max(globalDiv.querySelector(".ScaleX").value,globalDiv.querySelector(".ScaleY").value )
     if (x && y && r && m) {
-      window.addObject(x, y, m, r);
+      window.addObject(x, y, m, scale*r);
     } else {
       window.addObject(0, 0, 5, 5);
     }

@@ -12,7 +12,7 @@ const da = 2
 const dn = 2
 
 const dScaleX float64 = 200000
-const dScaleY float64 = 300000
+const dScaleY float64 = 150000
 
 type WorldMap struct {
 	A, B, Y0, ScaleX, ScaleY float64

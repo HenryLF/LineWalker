@@ -46,6 +46,9 @@ func RegisterBindings(w webview.WebView) {
 	w.Bind("setGlobals", CurrentView.Set)
 	w.Bind("getGlobals", CurrentView.Get)
 
+	w.Bind("setPlayer", physic.CurrentState.SetPlayer)
+	w.Bind("getPlayer", physic.CurrentState.GetPlayer)
+
 }
 
 func requestObjectCoord(M map[string]bool) []physic.Object {

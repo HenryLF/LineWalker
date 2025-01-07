@@ -1,7 +1,6 @@
 package physic
 
 import (
-	"log"
 	"math"
 )
 
@@ -21,7 +20,6 @@ type Object struct {
 	M, R float64
 
 	ScreenCoord *VectInt
-	ScreenR     *int
 
 	Meta *ObjectMetaData
 }
@@ -29,13 +27,6 @@ type Object struct {
 func (Obj *Object) ScreenCoordFromTransform(t func(x, y float64) (int, int)) {
 	x, y := t(Obj.Coord.X, Obj.Coord.Y)
 	*Obj.ScreenCoord = VectInt{X: x, Y: y}
-	x, y = t(Obj.R, Obj.R)
-	log.Println(x, y)
-	if x > y {
-		*Obj.ScreenR = x
-	} else {
-		*Obj.ScreenR = y
-	}
 }
 
 func (Obj *Object) SetMetaData(s string, v any) {
@@ -48,7 +39,6 @@ func NewObject(X, Y, M, R float64) Object {
 	*(out.Coord) = Vect{X: X, Y: Y}
 	out.Speed = new(Vect)
 	out.ScreenCoord = new(VectInt)
-	out.ScreenR = new(int)
 	out.M = M
 	out.R = R
 	meta := make(ObjectMetaData)

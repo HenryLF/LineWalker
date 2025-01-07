@@ -5,9 +5,18 @@ import (
 	"log"
 )
 
-func (S *State) Set(n int, s string, a ...float64) any {
-	if n < 0 || n > len(S.Obj) || len(a) == 0 {
+func (S *State) Set(n int, s string, c ...json.Number) any {
+	if n < 0 || n > len(S.Obj) || len(c) == 0 {
 		return nil
+	}
+	a := []float64{}
+	for _, C := range c {
+		A, err := C.Float64()
+		if err != nil {
+			log.Printf("Error setting %v to %v.\n", s, C)
+			return S.Get(n, s)
+		}
+		a = append(a, A)
 	}
 	v := new(Vect)
 	switch s {
@@ -17,22 +26,39 @@ func (S *State) Set(n int, s string, a ...float64) any {
 			v.Y = a[1]
 			S.Obj[n].Coord = v
 		}
-		return *S.Obj[n].Coord
 	case "Speed":
 		if len(a) > 1 {
 			v.X = a[0]
 			v.Y = a[1]
 			S.Obj[n].Speed = v
 		}
-		return *S.Obj[n].Speed
 	case "M":
 		S.Obj[n].M = a[0]
-		return S.Obj[n].M
 	case "R":
 		S.Obj[n].R = a[1]
-		return S.Obj[n].R
 	}
-	return nil
+	return S.Get(n, s)
+}
+
+func (S *State) SetPlayer(s string, a json.Number) any {
+	c, err := a.Float64()
+	if err != nil || c == 0 {
+		log.Printf("Error setting %v with value %v\n", s, a)
+	}
+	log.Printf("Setting Player %v from %v to %v\n", s, S.GetPlayer(s), c)
+	switch s {
+	case "X":
+		S.Obj[0].Coord.X = c
+	case "Y":
+		S.Obj[0].Coord.X = c
+	case "M":
+		S.Obj[0].M = c
+	case "R":
+		S.Obj[0].R = c
+	default:
+		log.Println("Error setting", s)
+	}
+	return S.GetPlayer(s)
 }
 
 func (S *State) Get(n int, s string) any {
@@ -50,6 +76,20 @@ func (S *State) Get(n int, s string) any {
 	case "R":
 		return k.R
 	}
+	return nil
+}
+func (S *State) GetPlayer(s string) any {
+	switch s {
+	case "X":
+		return S.Obj[0].Coord.X
+	case "Y":
+		return S.Obj[0].Coord.X
+	case "M":
+		return S.Obj[0].M
+	case "R":
+		return S.Obj[0].R
+	}
+	log.Println("No property ", s)
 	return nil
 }
 

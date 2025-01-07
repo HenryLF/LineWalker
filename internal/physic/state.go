@@ -56,4 +56,4 @@ func (S *State) ScreenCoordFromTransform(ScreenTransform func(float64, float64) 
 	}
 }
 
-var CurrentState = State{Time: time.Now(), Obj: []Object{NewObject(500, 0, 5, 20)}}
+var CurrentState = State{Time: time.Now(), Obj: []Object{NewObject(500, 0, 5, 4500)}}

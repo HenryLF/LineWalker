@@ -75,7 +75,7 @@ func movementForce(Obj Object, Input UserInput, Floor func(float64) float64, gro
 			out = out.add(slope.multiply(-Const.LateralAirAcc))
 		}
 	}
-	if Input.Down && !grounded {
+	if Input.Down {
 		out = Vect{0, 1}
 		return out.multiply(Const.VerticalAccDown)
 	}

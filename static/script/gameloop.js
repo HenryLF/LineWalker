@@ -15,12 +15,13 @@ async function loop(n) {
   objCoord = await window.requestObjectCoord(userInput);
   lineMap = await window.requestLine();
   drawFloor(lineMap);
+  
   objCoord.forEach((obj, k) => {
     if (k == 0) {
       renderFunction(obj, n);
       updateUI(obj);
     } else {
-      Ball.render(obj.ScreenCoord.X, obj.ScreenCoord.Y, obj.R);
+      Ball.render(obj.ScreenCoord.X, obj.ScreenCoord.Y, obj.R/scale);
     }
   });
   setTimeout(
