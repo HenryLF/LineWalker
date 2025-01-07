@@ -22,14 +22,9 @@ func (Obj Object) log(t *testing.T) {
 	Mass : %v
 	Radius : %v
 	Screen : %v
-	Meta : %v`, &Obj, *Obj.Coord, *Obj.Speed, Obj.M, Obj.R, *Obj.ScreenCoord, *Obj.meta)
+	Meta : %v`, &Obj, *Obj.Coord, *Obj.Speed, Obj.M, Obj.R, *Obj.ScreenCoord, *Obj.Meta)
 }
 func TestObject(t *testing.T) {
-	ExObject.log(t)
-}
-func TestObjectSetScreenCoord(t *testing.T) {
-	ExObject.log(t)
-	ExObject.SetScreenCoord(30, 30)
 	ExObject.log(t)
 }
 func TestObjectSetMeta(t *testing.T) {
@@ -94,20 +89,20 @@ func TestDetectFloor(t *testing.T) {
 
 func TestReactiveForce(t *testing.T) {
 	A := NewObject(0, 450, 50, 1)
-	t.Log("contact flat", contact(A, FlatFloor), angleOf(FlatFloor, 0))
+	t.Log("contact flat", contact(A, FlatFloor), vectOf(FlatFloor, 0))
 	t.Log(reactiveForce(FlatFloor, A, gravityForce(A)))
 
-	t.Log("contact slop", contact(A, SlopFloor), angleOf(SlopFloor, 0))
+	t.Log("contact slop", contact(A, SlopFloor), vectOf(SlopFloor, 0))
 	t.Log(reactiveForce(SlopFloor, A, gravityForce(A)))
 
-	t.Log("contact big slop", contact(A, VerySlopFloor), angleOf(VerySlopFloor, 0))
+	t.Log("contact big slop", contact(A, VerySlopFloor), vectOf(VerySlopFloor, 0))
 	t.Log(reactiveForce(SlopFloor, A, gravityForce(A)))
 
 }
 
 func TestSetConst(t *testing.T) {
 	t.Log(Const)
-	Const.Set("G", 0)
+	Const.Set("G", "0")
 	t.Log(Const)
 }
 
@@ -125,7 +120,7 @@ func TestGetCoord(t *testing.T) {
 
 func TestSetCoord(t *testing.T) {
 	t.Log(CurrentState.Obj[0].Coord)
-	k := CurrentState.Set(0, "Coord", 453, -566)
+	k := CurrentState.Set(0, "Coord", "453", "-566")
 	t.Log(k)
 	t.Log(CurrentState.Obj[0].Coord)
 }
