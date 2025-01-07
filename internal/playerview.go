@@ -1,6 +1,7 @@
 package bindings
 
 import (
+	"encoding/json"
 	"linewalker/internal/physic"
 	"log"
 )
@@ -37,25 +38,30 @@ func (P *PlayerView) Center(Obj physic.Object) {
 	P.X = int(Obj.Coord.X) - P.ScaleX*P.Width/2
 	P.Y = int(Obj.Coord.Y) - P.ScaleY*P.Height/2
 }
-func (P *PlayerView) Set(s string, a int) int {
+func (P *PlayerView) Set(s string, a json.Number) any {
+	c, err := a.Int64()
+	if err != nil || c == 0 {
+		log.Printf("Error setting %v with value %v\n", s, a)
+	}
+	log.Printf("Setting %v from %v to %v\n", s, P.Get(s), c)
 	switch s {
 	case "X":
-		P.X = a
+		P.X = int(c)
 	case "Y":
-		P.Y = a
+		P.Y = int(c)
 	case "Width":
-		P.Width = a
+		P.Width = int(c)
 	case "Height":
-		P.Height = a
+		P.Height = int(c)
 	case "ScaleX":
-		P.ScaleX = a
+		P.ScaleX = int(c)
 	case "ScaleY":
-		P.ScaleY = a
+		P.ScaleY = int(c)
 	}
 	log.Println("Error setting", s)
 	return P.Get(s)
 }
-func (P *PlayerView) Get(s string) int {
+func (P *PlayerView) Get(s string) any {
 	switch s {
 	case "Width":
 		return P.Width
@@ -67,7 +73,7 @@ func (P *PlayerView) Get(s string) int {
 		return P.ScaleY
 	}
 	log.Println("Error getting", s)
-	return 0
+	return nil
 }
 
 var CurrentView = PlayerView{

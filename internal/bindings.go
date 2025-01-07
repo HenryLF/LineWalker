@@ -43,8 +43,8 @@ func RegisterBindings(w webview.WebView) {
 
 	w.Bind("addObject", physic.CurrentState.AddObject)
 
-	w.Bind("setPlayerView", CurrentView.Set)
-	w.Bind("getPlayerView", CurrentView.Get)
+	w.Bind("setGlobals", CurrentView.Set)
+	w.Bind("getGlobals", CurrentView.Get)
 
 }
 

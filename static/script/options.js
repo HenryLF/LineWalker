@@ -69,6 +69,7 @@ function populateSetting(
     let val = asInt ? parseInt(input.value) : parseFloat(input.value);
     let k;
     if (val) {
+      console.log(callbackSet,callBackString,val)
       k = await callbackSet(callBackString, val);
     } else {
       k = await callbackGet(callBackString);
@@ -91,7 +92,7 @@ function populateMenus() {
 
   globalSettings.map((e) => {
     globalDiv.appendChild(
-      populateSetting(...e, window.getPlayerView, window.setPlayerView, true)
+      populateSetting(...e, window.getGlobals, window.setGlobals, true)
     );
   });
 
