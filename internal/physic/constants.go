@@ -8,14 +8,14 @@ const dFloorFrictionCoeff float64 = 1
 const dFloorReactionCoeff float64 = 1
 const dDX float64 = 0.01
 const dGroundHardness float64 = 100
-const dLateralAcc float64 = 1000
-const dLateralAirAcc float64 = 100
+const dLateralAcc float64 = 2000
+const dLateralAirAcc float64 = 500
 const dVerticalAcc float64 = 10000
 const dVerticalAccDown float64 = 1000
 const dCapSpeed float64 = 5000
 const dTimeSlow float64 = .01
 const dMaxTimeDelay float64 = 1
-const dElasticColision float64 = 1
+const dElasticColision float64 = 1.2
 
 type Constants struct {
 	G, AirFrictionCoeff, FloorFrictionCoeff, DX,

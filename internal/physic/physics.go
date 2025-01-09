@@ -47,7 +47,7 @@ func (A Object) overlap(B Object) float64 {
 	return math.Abs(A.Coord.X + A.R - B.Coord.X - B.R)
 }
 func colisionForce(Obj Object, Col Object) Vect {
-	return (*Col.Coord).to(*Obj.Coord).unit().multiply(math.Pow(Obj.overlap(Col), 2) * Const.ElasticColision)
+	return (*Col.Coord).to(*Obj.Coord).unit().multiply(math.Pow(Obj.overlap(Col), Const.ElasticColision))
 }
 
 func groundingForce(Obj Object, Floor func(float64) float64) Vect {

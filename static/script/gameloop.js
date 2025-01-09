@@ -25,7 +25,7 @@ async function loop(n) {
       Ball.render(
         obj.ScreenCoord.X,
         obj.ScreenCoord.Y,
-        (obj.R ) / (PlayerIdle_img.height*2)
+        (obj.R ) / (PlayerIdle_img.height*3)
       );
     }
   });
