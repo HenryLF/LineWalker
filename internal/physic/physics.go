@@ -11,7 +11,7 @@ func gravityForce(Obj Object) Vect {
 func reactiveForce(Floor func(float64) float64, Obj Object, R Vect) Vect {
 	if contact(Obj, Floor) {
 		out := vectOf(Floor, Obj.Coord.X).rot()
-		return out.multiply(-R.norm())
+		return out.multiply(-R.norm() * Const.FloorReactionCoeff)
 	} else {
 		return Vect{X: 0, Y: 0}
 	}
@@ -36,15 +36,22 @@ func vectOf(Floor func(float64) float64, x float64) Vect {
 	return out.unit()
 }
 
-func (Obj *Object) ground(Floor func(float64) float64) {
-	Obj.Coord.Y = math.Min(Floor(Obj.Coord.X)-Obj.R, Obj.Coord.Y)
-	Obj.Speed.Y = math.Min(Floor(Obj.Speed.Y), 0)
+//	func (Obj *Object) ground(Floor func(float64) float64) {
+//		Obj.Coord.Y = math.Min(Floor(Obj.Coord.X)-Obj.R, Obj.Coord.Y)
+//		Obj.Speed.Y = math.Min(Floor(Obj.Speed.Y), 0)
+//	}
+func (Obj Object) bellowGround(Floor func(float64) float64) float64 {
+	return math.Max(Obj.Coord.Y+Obj.R-Floor(Obj.Coord.X), 0)
+}
+func (A Object) overlap(B Object) float64 {
+	return math.Abs(A.Coord.X + A.R - B.Coord.X - B.R)
 }
 func colisionForce(Obj Object, Col Object) Vect {
-	Energy := Obj.M * math.Pow(Obj.Speed.norm(), 2) / 2
-	Energy += Col.M * math.Pow(Col.Speed.norm(), 2) / 2
-	Energy /= 2
-	return (*Col.Coord).to(*Obj.Coord).unit().multiply(Energy * Const.ElasticColision)
+	return (*Col.Coord).to(*Obj.Coord).unit().multiply(math.Pow(Obj.overlap(Col), 2) * Const.ElasticColision)
+}
+
+func groundingForce(Obj Object, Floor func(float64) float64) Vect {
+	return Vect{0, -1}.multiply(math.Pow(Obj.bellowGround(Floor), 2) / Const.GroundHardness)
 }
 
 func movementForce(Obj Object, Input UserInput, Floor func(float64) float64, grounded bool) Vect {

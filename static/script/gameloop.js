@@ -6,22 +6,27 @@ function resizeCanvas() {
 resizeCanvas();
 window.onresize = resizeCanvas;
 
-
-// let objCoord;
-// let lineMap;
+let objCoord;
+let lineMap;
+let playerSize;
 let renderFunction = drawPlayer;
 async function loop(n) {
   n = n ? n : 0;
   objCoord = await window.requestObjectCoord(userInput);
   lineMap = await window.requestLine();
+  playerSize = await window.getPlayer("R");
   drawFloor(lineMap);
-  
-  objCoord.forEach((obj, k) => {
+
+  objCoord.forEach(async (obj, k) => {
     if (k == 0) {
       renderFunction(obj, n);
       updateUI(obj);
     } else {
-      Ball.render(obj.ScreenCoord.X, obj.ScreenCoord.Y, obj.R/scale);
+      Ball.render(
+        obj.ScreenCoord.X,
+        obj.ScreenCoord.Y,
+        (obj.R ) / (PlayerIdle_img.height*2)
+      );
     }
   });
   setTimeout(
@@ -33,11 +38,10 @@ async function loop(n) {
   );
 }
 
-
 document.addEventListener("DOMContentLoaded", () => {
   resizeCanvas();
   populateMenus();
-  document.getElementById("soundtrack").play()
+  document.getElementById("soundtrack").play();
 });
 
 setTimeout(loop, 500, 0);

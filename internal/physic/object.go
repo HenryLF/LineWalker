@@ -83,7 +83,10 @@ func (Obj *Object) PFD(Floor func(float64) float64, Input UserInput, Colision []
 	*(Obj.Coord) = Obj.Coord.apply(*(Obj.Speed), delay)
 	grounded = contact(*Obj, Floor)
 	if grounded {
-		Obj.ground(Floor)
+		// Obj.ground(Floor)
+		newSpeed = Obj.Speed.apply(groundingForce(*Obj, Floor), delay)
+		*(Obj.Speed) = newSpeed.multiply(1 / Obj.M)
+		*(Obj.Coord) = Obj.Coord.apply(*(Obj.Speed), delay)
 	}
 	Obj.SetMetaData("isGrounded", grounded)
 }

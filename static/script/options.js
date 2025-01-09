@@ -12,6 +12,8 @@ let physicSettings = [
   ["Gravity", "G"],
   ["Air Friction", "AirFrictionCoeff"],
   ["Floor Friction", "FloorFrictionCoeff"],
+  ["Floor Reaction", "FloorReactionCoeff"],
+  ["Hard Ground", "GroundHardness"],
   ["Slope Angle DX", "DX"],
   ["Player AccelerationX (Ground)", "LateralAcc"],
   ["Player AccelerationX (Air)", "LateralAirAcc"],
@@ -54,7 +56,7 @@ let addObjectCurrentSettings = new Map([
   ["objM", 5],
   ["objR", 5],
 ]);
-
+let scale;
 function populateSetting(
   name,
   callBackString,
@@ -121,14 +123,13 @@ function populateMenus() {
     addObjectMenu.appendChild(t);
   });
 
-  addObjectButton.onclick = () => {
+  addObjectButton.onclick = async () => {
     let x = addObjectCurrentSettings.get("objX");
     let y = addObjectCurrentSettings.get("objY");
     let m = addObjectCurrentSettings.get("objM");
     let r = addObjectCurrentSettings.get("objR");
-    let scale  = Math.max(globalDiv.querySelector(".ScaleX").value,globalDiv.querySelector(".ScaleY").value )
     if (x && y && r && m) {
-      window.addObject(x, y, m, scale*r);
+      window.addObject(x, y, m, r*playerSize/10);
     } else {
       window.addObject(0, 0, 5, 5);
     }
@@ -153,3 +154,5 @@ const bigCatButton = document.getElementById("bigcat");
 bigCatButton.onclick = () => {
   renderFunction = drawBigPlayer;
 };
+
+    

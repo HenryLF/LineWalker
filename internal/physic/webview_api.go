@@ -115,6 +115,8 @@ func (C *Constants) Set(s string, c json.Number) any {
 		C.AirFrictionCoeff = a
 	case "FloorFrictionCoeff":
 		C.FloorFrictionCoeff = a
+	case "FloorReactionCoeff":
+		C.FloorReactionCoeff = a
 	case "DX":
 		C.DX = a
 	case "LateralAcc":
@@ -133,6 +135,8 @@ func (C *Constants) Set(s string, c json.Number) any {
 		C.MaxTimeDelay = a
 	case "ElasticColision":
 		C.ElasticColision = a
+	case "GroundHardness":
+		C.GroundHardness = a
 	default:
 		log.Println("Error setting", s)
 	}
@@ -147,6 +151,8 @@ func (C *Constants) Get(s string) any {
 		return C.AirFrictionCoeff
 	case "FloorFrictionCoeff":
 		return C.FloorFrictionCoeff
+	case "FloorReactionCoeff":
+		return C.FloorReactionCoeff
 	case "DX":
 		return C.DX
 	case "LateralAcc":
@@ -165,6 +171,8 @@ func (C *Constants) Get(s string) any {
 		return C.MaxTimeDelay
 	case "ElasticColision":
 		return C.ElasticColision
+	case "GroundHardness":
+		return C.GroundHardness
 	}
 	log.Println("No property ", s)
 	return nil
